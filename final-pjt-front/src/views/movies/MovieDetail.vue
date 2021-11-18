@@ -1,10 +1,7 @@
 <template>
   <div>
-    <ul>
-      <li v-for="movie in movies" :key="movie.id">
-        <span @click="moveToDetail(movie.id)">{{ movie.title }}</span>
-      </li>
-    </ul>
+    <h1>DETAIL~~~</h1>
+    <span>{{ movie }}</span>
   </div>
 </template>
 
@@ -12,10 +9,10 @@
 import axios from 'axios'
 
 export default {
-  name: 'MovieList',
+  name: 'MovieDetail',
   data: function () {
     return {
-      movies: null,
+      movie: null,
     }
   },
   methods: {
@@ -26,31 +23,24 @@ export default {
       }
       return config
     },
-    getMovies: function () {
+    getMovie: function () {
       axios({
         method: 'get',
-        url: 'http://127.0.0.1:8000/movies/',
+        url: `http://127.0.0.1:8000/movies/${this.$route.query.movieId}`,
         headers: this.setToken()
       })
         .then(res => {
           console.log(res)
-          this.movies = res.data
+          this.movie = res.data
         })
         .catch(err => {
           console.log(err)
         })
+      }
     },
-    moveToDetail: function (movieId) {
-      // console.log(movieId)
-      this.$router.push({
-        name: 'MovieDetail',
-        query: { movieId }  
-      })
-    }
-  },
   created: function () {
     if (localStorage.getItem('jwt')) {
-      this.getMovies()
+      this.getMovie()
     } else {
       this.$router.push({ name: 'Login' })
     }
