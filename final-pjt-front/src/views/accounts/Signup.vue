@@ -2,11 +2,19 @@
   <div>
     <h1>Signup</h1>
     <div>
-      <label for="username">사용자 이름: </label>
+      <label for="username">ID: </label>
       <input 
         type="text"
         id="username"
         v-model="credentials.username"
+      >
+    </div>
+    <div>
+      <label for="nickname">닉네임: </label>
+      <input 
+        type="text"
+        id="nickname"
+        v-model="credentials.nickname"
       >
     </div>
     <div>
@@ -39,6 +47,7 @@ export default {
     return {
       credentials: {
         username: null,
+        nickname: null,
         password: null,
         passwordConfirmation: null,
       }

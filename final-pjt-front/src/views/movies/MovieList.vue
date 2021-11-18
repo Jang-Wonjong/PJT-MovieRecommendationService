@@ -29,7 +29,7 @@ export default {
     getMovies: function () {
       axios({
         method: 'get',
-        url: 'http://127.0.0.1:8000/movies/',
+        url: 'http://127.0.0.1:8000/movie/list/',
         headers: this.setToken()
       })
         .then(res => {
