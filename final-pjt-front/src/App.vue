@@ -1,9 +1,12 @@
 <template>
   <div id="app">
     <div id="nav">
-      <!-- <router-link to="/">Home</router-link> | -->
-      <router-link :to="{ name: 'MovieList' }">MovieList</router-link>
-      <p>test</p>
+      <span>
+        <router-link :to="{ name: 'Signup' }">Signup</router-link> |
+      </span>
+      <span>
+        <router-link :to="{ name: 'MovieList' }">MovieList</router-link>
+      </span>
     </div>
     <router-view/>
   </div>
