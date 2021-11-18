@@ -21,6 +21,5 @@ from django.urls.conf import include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    path('community/', include('community.urls')),
-    path('movies/', include('movies.urls')),
+    path('movie/', include('movies.urls')),
 ]

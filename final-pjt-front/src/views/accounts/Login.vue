@@ -2,7 +2,7 @@
   <div>
     <h1>Login</h1>
     <div>
-      <label for="username">사용자 이름: </label>
+      <label for="username">ID: </label>
       <input 
         type="text"
         id="username"

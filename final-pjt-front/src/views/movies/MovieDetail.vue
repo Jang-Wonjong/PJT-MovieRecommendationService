@@ -26,7 +26,7 @@ export default {
     getMovie: function () {
       axios({
         method: 'get',
-        url: `http://127.0.0.1:8000/movies/${this.$route.query.movieId}`,
+        url: `http://127.0.0.1:8000/movie/${this.$route.query.movieId}`,
         headers: this.setToken()
       })
         .then(res => {
