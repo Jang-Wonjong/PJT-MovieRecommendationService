@@ -1,16 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Signup from '@/views/accounts/Signup'
 import MovieList from '@/views/movies/MovieList'
 
 
 Vue.use(VueRouter)
 
 const routes = [
-  // {  나중에 쓸거
-  //   path: '/',
-  //   name: 'Home',
-  //   component: Home
-  // },
+  {
+    path: '/',
+    name: 'Signup',
+    component: Signup
+  },
   {
     path: '/movies',
     name: 'MovieList',

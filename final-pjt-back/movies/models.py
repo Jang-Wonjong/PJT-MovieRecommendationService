@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 # Create your models here.
@@ -18,6 +19,13 @@ class Movie(models.Model):
     video = models.BooleanField()
     vote_average = models.FloatField()
     vote_count = models.IntegerField()
+    
+    my_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='my_movies')
 
     def __str__(self):
         return self.title
+
+# class MyMovie(models.Model):
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    
