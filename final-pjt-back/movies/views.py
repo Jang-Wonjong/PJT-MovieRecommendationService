@@ -11,3 +11,4 @@ def movie_list(request):
     movies = Movie.objects.all()
     serializer = MovieSerializer(movies, many=True)
     return Response(serializer.data)
+
