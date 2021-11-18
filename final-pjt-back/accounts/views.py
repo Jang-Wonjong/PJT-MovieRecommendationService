@@ -7,7 +7,7 @@ from .serializers import UserSerializer
 
 
 # Create your views here.
-api_view(['POST'])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def signup(request):
     password = request.data.get('password')
