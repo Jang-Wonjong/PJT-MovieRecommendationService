@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Signup',
   data: function () {
@@ -44,7 +46,29 @@ export default {
   },
   methods: {
     signup: function () {
-      console.log(this.credentials)
+      axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8000/accounts/signup/',
+        data: this.credentials
+      })
+        .then(() => { // 회원가입 시 자동 로그인
+          axios({
+            method: 'post',
+            url: 'http://127.0.0.1:8000/accounts/api-token-auth/',
+            data: this.credentials
+          })
+            .then(res => {
+              localStorage.setItem('jwt', res.data.token)
+              this.$emit('login')
+              this.$router.push({ name: 'MovieList' })
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }
