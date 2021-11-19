@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h1>DETAIL~~~</h1>
+    <h1>DETAIL</h1>
+    <div v-if="SelectedMovie">
+      <img :src="imgSrc" alt="">
+    </div>
     <span>{{ SelectedMovie }}</span>
     <div>
       <input 
@@ -8,7 +11,7 @@
         v-model.trim="content"
         @keyup.enter="createReview"
       >
-      <button @click="createReview">리뷰 작성</button>
+      <button @click="createReview">리뷰 작성</button><br>
       <span>{{ reviews }}</span>
     </div>
   </div>
@@ -91,6 +94,11 @@ export default {
       this.getReviews()
     } else {
       this.$router.push({ name: 'Login' })
+    }
+  },
+  computed: {
+    imgSrc: function () {
+      return 'https://image.tmdb.org/t/p/w400' + this.SelectedMovie.poster_path
     }
   }
 }
