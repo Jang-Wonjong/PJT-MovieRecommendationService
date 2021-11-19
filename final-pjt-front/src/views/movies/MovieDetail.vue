@@ -16,10 +16,19 @@
     <div>
       <ul>
         <li v-for="review in reviews" :key="review.id">
-          <span>{{ review.content }}</span>
-          <span>{{ review.rank }}</span>
-          <!-- <button @click="updateReview(review)">수정</button> -->
+          <span>리뷰: {{ review.content }}</span><br>
+          <span>평점: {{ review.rank }}</span><br>
+          <button @click="isReviewUpdate=true">수정</button>
           <button @click="deleteReview(review)">삭제</button>
+          <div v-if="isReviewUpdate">
+            <input 
+              type="text"
+              v-model.trim="contentUpdate"
+              @keyup.enter="updateReview(review)"
+            >
+            <button @click="updateReview(review)">저장</button>
+          </div>
+          <hr>
         </li>
       </ul>
     </div>
@@ -37,6 +46,8 @@ export default {
       SelectedMovieId: null,  // MovieList에서 query로 넘겨준 movie id 받는 변수
       reviews: null,
       content: null,
+      contentUpdate: null,
+      isReviewUpdate: false,
     }
   },
   methods: {
@@ -100,7 +111,7 @@ export default {
       // console.log(review)
       axios({
         method: 'delete',
-        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/review/${review.id}`,
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/review/${review.id}/`,
         headers: this.setToken()
       })
         .then(res => {
@@ -111,8 +122,26 @@ export default {
           console.log(err)
         })
     },
-    updateReview: function () {
-
+    updateReview: function (review) {
+      const reviewItem = {
+        ...review,
+        content: this.contentUpdate,
+      }
+      axios({
+        method: 'put',
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/review/${review.id}/`,
+        data: reviewItem,
+        headers: this.setToken()
+      })
+        .then(res => {
+          console.log(res)
+          // this.reviews += res.data
+          this.getReviews()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      this.contentUpdate = null
     }
   },
   created: function () {
@@ -132,6 +161,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .is-completed {
+    text-decoration: line-through;
+    color: rgb(112, 112, 112);
+  }
 </style>
