@@ -8,7 +8,7 @@
     <div>
       <input 
         type="text"
-        v-model.trim="content"
+        v-model.trim="reviewContent"
         @keyup.enter="createReview"
       >
       <button @click="createReview">리뷰 작성</button><br>
@@ -23,10 +23,29 @@
           <div v-if="isReviewUpdate">
             <input 
               type="text"
-              v-model.trim="contentUpdate"
+              v-model.trim="reviewContentUpdate"
               @keyup.enter="updateReview(review)"
             >
             <button @click="updateReview(review)">저장</button>
+          </div>
+          <button @click="getComments(review)">댓글 보기</button>
+          <div>
+            <input 
+              type="text"
+              v-model.trim="commentContent"
+              @keyup.enter="createComment(review)"
+            >
+            <button @click="createComment(review)">댓글 생성</button>
+            <li v-for="comment in comments" :key="comment.id">
+              <span>댓글: {{ comment }}</span><br>
+              <input 
+                type="text"
+                v-model.trim="commentContentUpdate"
+                @keyup.enter="updateComment(review, comment)"
+              >
+              <button @click="updateComment(review, comment)">수정</button>
+              <button @click="deleteComment(review, comment)">삭제</button>
+            </li>
           </div>
           <hr>
         </li>
@@ -44,10 +63,15 @@ export default {
     return {
       SelectedMovie: null,
       SelectedMovieId: null,  // MovieList에서 query로 넘겨준 movie id 받는 변수
+
       reviews: null,
-      content: null,
-      contentUpdate: null,
+      reviewContent: null,
+      reviewContentUpdate: null,
       isReviewUpdate: false,
+
+      comments: null,
+      commentContent: null,
+      commentContentUpdate: null,
     }
   },
   methods: {
@@ -58,6 +82,7 @@ export default {
       }
       return config
     },
+    // movie
     getMovie: function () {
       axios({
         method: 'get',
@@ -72,6 +97,7 @@ export default {
           console.log(err)
         })
     },
+    // review
     getReviews: function () {
       axios({
         method: 'get',
@@ -88,7 +114,7 @@ export default {
     },
     createReview: function () {
       const reviewItem = {
-        content: this.content,
+        content: this.reviewContent,
         rank: 5,
       }
       axios({
@@ -105,7 +131,7 @@ export default {
         .catch(err => {
           console.log(err)
         })
-      this.content = null
+      this.reviewContent = null
     },
     deleteReview: function (review) {
       // console.log(review)
@@ -135,13 +161,82 @@ export default {
       })
         .then(res => {
           console.log(res)
-          // this.reviews += res.data
           this.getReviews()
         })
         .catch(err => {
           console.log(err)
         })
-      this.contentUpdate = null
+      this.reviewContentUpdate = null
+    },
+    // comment
+    getComments: function (review) {
+      axios({
+        method: 'get',
+        url: `http://127.0.0.1:8000/movie/review/${review.id}/comment/`,
+        headers: this.setToken()
+      })
+        .then(res => {
+          // console.log(res)
+          this.comments = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    createComment: function (review) {
+      const commentItem = {
+        content: this.commentContent,
+      }
+      console.log(review.id)
+      axios({
+        method: 'post',
+        url: `http://127.0.0.1:8000/movie/review/${review.id}/comment/`,
+        data: commentItem,
+        headers: this.setToken()
+      })
+        .then(res => {
+          // console.log(res)
+          this.comments += res.data
+          this.getComments(review)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      this.commentContent = null
+    },
+    deleteComment: function (review, comment) {
+      axios({
+        method: 'delete',
+        url: `http://127.0.0.1:8000/movie/review/${review.id}/comment/${comment.id}/`,
+        headers: this.setToken()
+      })
+        .then(res => {
+          console.log(res)
+          this.getComments(review)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    updateComment: function (review, comment) {
+      const commentItem = {
+        ...comment,
+        content: this.commentContentUpdate,
+      }
+      axios({
+        method: 'put',
+        url: `http://127.0.0.1:8000/movie/review/${review.id}/comment/${comment.id}/`,
+        data: commentItem,
+        headers: this.setToken()
+      })
+        .then(res => {
+          console.log(res)
+          this.getComments(review)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      this.commentContentUpdate = null
     }
   },
   created: function () {
