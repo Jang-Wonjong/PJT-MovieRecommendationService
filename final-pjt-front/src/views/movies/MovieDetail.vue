@@ -1,7 +1,16 @@
 <template>
   <div>
     <h1>DETAIL~~~</h1>
-    <span>{{ movie }}</span>
+    <span>{{ SelectedMovie }}</span>
+    <div>
+      <input 
+        type="text"
+        v-model.trim="content"
+        @keyup.enter="createReview"
+      >
+      <button @click="createReview">리뷰 작성</button>
+      <span>{{ reviews }}</span>
+    </div>
   </div>
 </template>
 
@@ -12,7 +21,10 @@ export default {
   name: 'MovieDetail',
   data: function () {
     return {
-      movie: null,
+      SelectedMovie: null,
+      SelectedMovieId: null,  // MovieList에서 query로 넘겨준 movie id 받는 변수
+      reviews: null,
+      content: null,
     }
   },
   methods: {
@@ -26,21 +38,57 @@ export default {
     getMovie: function () {
       axios({
         method: 'get',
-        url: `http://127.0.0.1:8000/movie/${this.$route.query.movieId}`,
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}`,
         headers: this.setToken()
       })
         .then(res => {
           console.log(res)
-          this.movie = res.data
+          this.SelectedMovie = res.data
         })
         .catch(err => {
           console.log(err)
         })
-      }
     },
+    getReviews: function () {
+      axios({
+        method: 'get',
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/review/`,
+        headers: this.setToken()
+      })
+        .then(res => {
+          console.log(res)
+          this.reviews = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    createReview: function () {
+      const reviewItem = {
+        content: this.content,
+        rank: 5,
+      }
+      axios({
+        method: 'post',
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/review/`,
+        data: reviewItem,
+        headers: this.setToken()
+      })
+        .then(res => {
+          console.log(res)
+          this.reviews += res.data
+          this.getReviews()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
   created: function () {
     if (localStorage.getItem('jwt')) {
+      this.SelectedMovieId = this.$route.query.movieId
       this.getMovie()
+      this.getReviews()
     } else {
       this.$router.push({ name: 'Login' })
     }
