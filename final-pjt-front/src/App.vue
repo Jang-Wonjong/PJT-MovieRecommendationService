@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <h1 id='logo'>Movie&Chill</h1>
+    <div id="nav" class="navbar navbar-expand-lg navbar-dark bg-dark">
       <span v-if="isLogin">
         <router-link :to="{ name: 'MovieList' }">MovieList</router-link> |
         <router-link @click.native="logout" to="#">Logout</router-link>
@@ -27,7 +28,8 @@ export default {
       this.isLogin = false
       localStorage.removeItem('jwt')
       this.$router.push({ name: 'Login' })
-    }
+    },
+    
   },
   created: function () {
     const token = localStorage.getItem('jwt')
@@ -45,19 +47,32 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: white;
+  background-color: black;
 }
 
 #nav {
-  padding: 30px;
+  padding: 10px;
+  background-color: black;
 }
 
 #nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: #6f42c1;
+  background-color: black;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #d63384;
+  background-color: black;
+
+}
+
+#logo {
+  color: #f8067f;
+  font-weight: bold;
+  background-color: black;
+  text-align: left;
+  padding: 10px;
 }
 </style>
