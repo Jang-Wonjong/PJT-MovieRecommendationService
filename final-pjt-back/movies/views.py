@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
-from .serializers import MovieListSerializer, MovieSerializer, ReviewSerializer
-from .models import Movie, Review
+from .serializers import MovieListSerializer, MovieSerializer, ReviewSerializer, CommentSerializer
+from .models import Movie, Review, Comment
 
 
 # Create your views here.
@@ -65,3 +65,44 @@ def review_update_or_delete(request, movie_pk, review_pk):
     elif request.method == 'DELETE':
         review.delete()
         return Response({ 'id': review_pk }, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
+def comment_list_or_create(request, review_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+
+    if request.method == 'GET':
+        # reviews = Review.objects.all()
+        comments = Comment.objects.filter(review_id=review_pk).order_by('-pk')
+        # paginator = Paginator(reviews, 5)
+        # page_number = request.GET.get('page_num')
+        # reviews = paginator.get_page(page_number)
+        serializer = CommentSerializer(comments, many=True)
+        # data.append({'possible_page': paginator.num_pages})
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user, review=review)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['PUT', 'DELETE'])
+@permission_classes([AllowAny])
+def comment_update_or_delete(request, review_pk, comment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk)
+
+    if not request.user.comment_set.filter(pk=comment_pk).exists():
+        return Response({'detail': '권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'PUT':
+        serializer = CommentSerializer(comment, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+
+    elif request.method == 'DELETE':
+        comment.delete()
+        return Response({ 'id': comment_pk }, status=status.HTTP_204_NO_CONTENT)
