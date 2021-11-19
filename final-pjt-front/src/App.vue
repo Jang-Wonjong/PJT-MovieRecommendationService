@@ -47,31 +47,31 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: white;
-  background-color: black;
+  color: black;
+  
 }
 
 #nav {
   padding: 10px;
-  background-color: black;
+  
 }
 
 #nav a {
   font-weight: bold;
   color: #6f42c1;
-  background-color: black;
+  
 }
 
 #nav a.router-link-exact-active {
   color: #d63384;
-  background-color: black;
+  
 
 }
 
 #logo {
   color: #f8067f;
   font-weight: bold;
-  background-color: black;
+  
   text-align: left;
   padding: 10px;
 }
