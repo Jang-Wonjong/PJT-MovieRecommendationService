@@ -12,7 +12,16 @@
         @keyup.enter="createReview"
       >
       <button @click="createReview">리뷰 작성</button><br>
-      <span>{{ reviews }}</span>
+    </div>
+    <div>
+      <ul>
+        <li v-for="review in reviews" :key="review.id">
+          <span>{{ review.content }}</span>
+          <span>{{ review.rank }}</span>
+          <!-- <button @click="updateReview(review)">수정</button> -->
+          <button @click="deleteReview(review)">삭제</button>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -45,7 +54,7 @@ export default {
         headers: this.setToken()
       })
         .then(res => {
-          console.log(res)
+          // console.log(res)
           this.SelectedMovie = res.data
         })
         .catch(err => {
@@ -59,7 +68,7 @@ export default {
         headers: this.setToken()
       })
         .then(res => {
-          console.log(res)
+          // console.log(res)
           this.reviews = res.data
         })
         .catch(err => {
@@ -78,13 +87,32 @@ export default {
         headers: this.setToken()
       })
         .then(res => {
-          console.log(res)
+          // console.log(res)
           this.reviews += res.data
           this.getReviews()
         })
         .catch(err => {
           console.log(err)
         })
+      this.content = null
+    },
+    deleteReview: function (review) {
+      // console.log(review)
+      axios({
+        method: 'delete',
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/review/${review.id}`,
+        headers: this.setToken()
+      })
+        .then(res => {
+          console.log(res)
+          this.getReviews()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    updateReview: function () {
+
     }
   },
   created: function () {
