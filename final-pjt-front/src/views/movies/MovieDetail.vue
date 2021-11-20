@@ -5,6 +5,7 @@
       <img :src="imgSrc" alt="">
     </div>
     <span>{{ SelectedMovie }}</span>
+    <button>my list</button>  <!-- 내 영화 -->
     <div>
       <input 
         type="text"
@@ -28,6 +29,7 @@
             >
             <button @click="updateReview(review)">저장</button>
           </div>
+          
           <button @click="getComments(review)">댓글 보기</button>
           <div>
             <input 
@@ -151,7 +153,7 @@ export default {
     updateReview: function (review) {
       const reviewItem = {
         ...review,
-        content: this.contentUpdate,
+        content: this.reviewContentUpdate,
       }
       axios({
         method: 'put',
