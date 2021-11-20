@@ -4,7 +4,8 @@
     <div id="nav" class="navbar navbar-expand-lg navbar-dark bg-dark">
       <span v-if="isLogin">
         <router-link :to="{ name: 'MovieList' }">MovieList</router-link> |
-        <router-link @click.native="logout" to="#">Logout</router-link>
+        <router-link @click.native="logout" to="#">Logout</router-link> |
+        <router-link :to="{ name: 'Profile' }">Profile</router-link>
       </span>
       <span v-else>
         <router-link :to="{ name: 'Signup' }">Signup</router-link> |

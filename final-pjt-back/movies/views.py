@@ -106,3 +106,39 @@ def comment_update_or_delete(request, review_pk, comment_pk):
     elif request.method == 'DELETE':
         comment.delete()
         return Response({ 'id': comment_pk }, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def my_list(request, movie_pk):
+    movie = get_object_or_404(Movie, movie_id=movie_pk)
+    user = request.user
+
+    if movie.my_users.filter(pk=user.pk).exists():
+        movie.my_users.remove(user)
+        liked = False
+    else:
+        movie.my_users.add(user)
+        liked = True
+    context = {
+        'liked': liked,
+        'count': movie.my_users.count(),
+    }
+    return Response(context)
+
+
+    # my_movies = PhotoTicket.objects.filter(user__pk=request.user.pk).order_by('-pk')
+    # # paginator = Paginator(photo_tickets, 12)
+    # # page_num = request.GET.get('page_num')
+    # # photo_tickets = paginator.get_page(page_num)
+    # serializer = PhotoTicketSerializer(photo_tickets, many=True)
+    # data = serializer.data
+    # data.append({'possible_page': paginator.num_pages})
+    # return Response(data)
+
+    elif request.method == 'POST':
+        movie = get_object_or_404(Movie, pk=movie_pk)
+        serializer = PhotoTicketSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user, movie=movie, poster_path=movie.poster_path, title=movie.title)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)

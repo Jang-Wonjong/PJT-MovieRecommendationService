@@ -7,6 +7,7 @@
         type="text"
         id="username"
         v-model="credentials.username"
+        placeholder="ID"
       >
     </div>
     <div>
@@ -15,6 +16,7 @@
         type="text"
         id="nickname"
         v-model="credentials.nickname"
+        placeholder="Nickname"
       >
     </div>
     <div>
@@ -23,6 +25,7 @@
         type="password"
         id="password"
         v-model="credentials.password"
+        placeholder="Password"
       >
     </div>
     <div>
@@ -31,6 +34,7 @@
         type="password"
         id="passwordConfirmation"
         v-model="credentials.passwordConfirmation"
+        placeholder="Password Confirmation"
         @keyup.enter="signup"
       >
     </div>
