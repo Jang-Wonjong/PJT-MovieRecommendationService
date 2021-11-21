@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Movie, Review, Comment
+from .models import Movie, Review, Comment, MyMovie
 
 # from accounts.serializers import UserSerializer
 
@@ -26,12 +26,19 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    # user = UserSerializer(read_only=True)
 
     class Meta:
         model = Comment
         fields = ('id', 'content',)
 
+
+class MyMovieSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = MyMovie
+        fields = ('movie_id', 'user_id',)
+        # fields = ('movie_id', 'user_id', 'title', 'poster_path',)
+        
 
 # class MovieSerializer(serializers.ModelSerializer):
 #     review_set = ReviewSerializer(many=True, read_only=True)

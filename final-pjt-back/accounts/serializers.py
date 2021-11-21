@@ -12,8 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    my_movies = MovieSerializer(many=True, read_only=True)
 
     class Meta:
         model = get_user_model()
-        fields = ('username', 'password', 'nickname', 'my_movies')
+        fields = ('username', 'password', 'nickname',)

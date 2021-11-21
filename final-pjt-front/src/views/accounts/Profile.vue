@@ -12,6 +12,10 @@
     </div>
 
     <button @click="deleteProfile">회원탈퇴</button>
+
+    <div>
+      <span>{{ myMovies }}</span>
+    </div>
   </div>
 </template>
 
@@ -24,6 +28,7 @@ export default {
     return {
       profile: null,
       nicknameUpdate: null,
+      myMovies: null,
       // passwordUpdate: null,
     }
   },
@@ -85,10 +90,25 @@ export default {
         })
       this.nicknameUpdate = null
     },
+    getMyMovie: function () {
+      axios({
+        method: 'get',
+        url: `http://127.0.0.1:8000/movie/my-movies/`,
+        headers: this.setToken()
+      })
+        .then(res => {
+          // console.log(res)
+          this.myMovies = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
   },
   created: function () {
     if (localStorage.getItem('jwt')) {
       this.getProfile()
+      this.getMyMovie()
     } else {
       this.$router.push({ name: 'Login' })
     }

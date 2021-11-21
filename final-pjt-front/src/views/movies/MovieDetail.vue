@@ -5,7 +5,11 @@
       <img :src="imgSrc" alt="">
     </div>
     <span>{{ SelectedMovie }}</span>
-    <button>my list</button>  <!-- 내 영화 -->
+
+  
+    <button v-if="!isMyMovie" @click="myMovieAdd">저장</button>  <!-- 내 영화 -->
+    <button v-else @click="myMovieRemove">저장 취소</button>
+
     <div>
       <input 
         type="text"
@@ -74,6 +78,8 @@ export default {
       comments: null,
       commentContent: null,
       commentContentUpdate: null,
+
+      isMyMovie: false,
     }
   },
   methods: {
@@ -189,7 +195,7 @@ export default {
       const commentItem = {
         content: this.commentContent,
       }
-      console.log(review.id)
+      // console.log(review.id)
       axios({
         method: 'post',
         url: `http://127.0.0.1:8000/movie/review/${review.id}/comment/`,
@@ -239,6 +245,36 @@ export default {
           console.log(err)
         })
       this.commentContentUpdate = null
+    },
+    myMovieAdd: function () {
+      axios({
+        method: 'post',
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/my-movie/`,
+        headers: this.setToken()
+      })
+        .then(res => {
+          console.log(res)
+          this.isMyMovie = true
+          // this.getMovie()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    myMovieRemove: function () {
+      axios({
+        method: 'delete',
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/my-movie/`,
+        headers: this.setToken()
+      })
+        .then(res => {
+          console.log(res)
+          this.isMyMovie = false
+          // this.getMovie()
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   created: function () {
