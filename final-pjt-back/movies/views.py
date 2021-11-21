@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
-from .serializers import MovieListSerializer, MovieSerializer, ReviewSerializer, CommentSerializer
-from .models import Movie, Review, Comment
+from .serializers import *
+from .models import *
 
 
 # Create your views here.
@@ -110,21 +110,38 @@ def comment_update_or_delete(request, review_pk, comment_pk):
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def my_list(request, movie_pk):
-    movie = get_object_or_404(Movie, movie_id=movie_pk)
-    user = request.user
+def my_movies(request):
+    my_movies = MyMovie.objects.filter(user_id=request.user.pk).order_by('-pk')
+    # paginator = Paginator(photo_tickets, 12)
+    # page_num = request.GET.get('page_num')
+    # photo_tickets = paginator.get_page(page_num)
+    serializer = MyMovieSerializer(my_movies, many=True)
+    # serializer.data.append({'possible_page': paginator.num_pages})
+    return Response(serializer.data)
 
-    if movie.my_users.filter(pk=user.pk).exists():
-        movie.my_users.remove(user)
-        liked = False
-    else:
-        movie.my_users.add(user)
-        liked = True
-    context = {
-        'liked': liked,
-        'count': movie.my_users.count(),
-    }
-    return Response(context)
+
+@api_view(['POST', 'DELETE'])
+@permission_classes([AllowAny])
+def my_movie(request, movie_pk):
+    # if request.method == 'GET':
+    #     my_movie = MyMovie.objects.filter(user_id=request.user.pk, movie_id=movie_pk).first()
+    #     serializer = MyMovieSerializer(my_movie)
+    #     return Response(serializer.data)
+
+    if request.method == 'POST':
+        movie = get_object_or_404(Movie, pk=movie_pk)
+        serializer = MyMovieSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user, movie=movie, title=movie.title, poster_path=movie.poster_path)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    elif request.method == 'DELETE':
+        my_movie = MyMovie.objects.filter(user_id=request.user.pk, movie_id=movie_pk).first()
+        my_movie.delete()
+        data = {
+            'delete' : '포토티켓이 삭제되었습니다.'
+        }
+        return Response(data, status=status.HTTP_204_NO_CONTENT)
 
 
     # my_movies = PhotoTicket.objects.filter(user__pk=request.user.pk).order_by('-pk')
@@ -136,9 +153,9 @@ def my_list(request, movie_pk):
     # data.append({'possible_page': paginator.num_pages})
     # return Response(data)
 
-    elif request.method == 'POST':
-        movie = get_object_or_404(Movie, pk=movie_pk)
-        serializer = PhotoTicketSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user, movie=movie, poster_path=movie.poster_path, title=movie.title)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    # elif request.method == 'POST':
+    #     movie = get_object_or_404(Movie, pk=movie_pk)
+    #     serializer = PhotoTicketSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save(user=request.user, movie=movie, poster_path=movie.poster_path, title=movie.title)
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)

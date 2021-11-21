@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul>
-      <li v-for="movie in movies" :key="movie.id">
+      <li v-for="movie in movies" :key="movie.id" class="liTag">
         <span @click="moveToDetail(movie.id)">{{ movie.title }}</span>
       </li>
     </ul>
@@ -58,6 +58,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.liTag {
+  cursor: pointer;
+}
 
+.liTag:hover {
+  background-color: #d63384;
+}
 </style>

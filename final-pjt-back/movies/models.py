@@ -20,7 +20,7 @@ class Movie(models.Model):
     vote_average = models.FloatField()
     vote_count = models.IntegerField()
     
-    my_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='my_movies')
+    # my_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='my_movies')
 
     def __str__(self):
         return self.title
@@ -41,3 +41,10 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class MyMovie(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    poster_path = models.TextField()
