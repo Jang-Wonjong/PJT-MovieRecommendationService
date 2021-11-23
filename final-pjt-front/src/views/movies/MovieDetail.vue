@@ -11,9 +11,10 @@
           <h1 class="h1Tag">{{ SelectedMovie.title }}</h1>
           <div class="movie-information mt-3">
             <span class="spanTag mt-3">{{ SelectedMovie }}</span>
-          </div>  
+          </div>
           <p>{{this.$store.state.id}}</p>
         </div>
+        <!-- My movie -->
         <div class="outerDivFull" >
           <div class="switchToggle">
               <input type="checkbox" 
@@ -26,6 +27,7 @@
         </div>
       </div>
 
+      <review class="movie-content"></review>
       <div class="community-reviewTag">
         <input 
           type="text"
@@ -80,10 +82,14 @@
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
+import Review from '@/components/Review.vue'
 
 
 export default {
   name: 'MovieDetail',
+  components: {
+    Review
+  },
   data: function () {
     return {
       SelectedMovie: null,

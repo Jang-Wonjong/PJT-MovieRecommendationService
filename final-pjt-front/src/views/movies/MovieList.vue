@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- <div id="aaa" class="movie-detail-image"> -->
-      <!-- <img src="https://mblogthumb-phinf.pstatic.net/20140128_271/dmsql993_1390916584721HWswN_GIF/tumblr_mznavgohkc1sbcetxo1_500.gif?type=w2" alt=""> -->
-    <!-- </div> -->
     <section class="wrapper">
       <div class="container">
         <div class="row">
@@ -84,37 +81,6 @@ export default {
 </script>
 
 <style scoped> 
-/* #aaa {
-  background-size: cover;
-  background-image: url(https://thumbs.gfycat.com/AdoredWindingIberianbarbel.webp);
-  background-repeat: no-repeat;
-  background-size: cover;
-} */
-
-/* .movie-detail-image {
-  background-size: cover;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-}
-
-.movie-detail-image::after {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  min-height: 100vh;
-  background-color: rgb(40, 40, 40);
-  opacity: 0.6;
-  content: "";
-  display: block;
-} */
-
 .liTag {
   cursor: pointer;
 }
