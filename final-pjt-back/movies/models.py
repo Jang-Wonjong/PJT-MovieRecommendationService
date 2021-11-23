@@ -35,6 +35,12 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+# class Rank(models.Model):
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='movie_rate')
+#     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='user_rate')
+#     rank = models.FloatField()
+
+
 class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     review = models.ForeignKey(Review, on_delete=models.CASCADE)

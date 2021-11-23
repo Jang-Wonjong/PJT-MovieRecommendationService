@@ -12,6 +12,7 @@
     </div>
 
     <button @click="deleteProfile">회원탈퇴</button>
+    <button @click="logout">로그아웃</button>
 
     <div>
       <span>{{ myMovies }}</span>
@@ -21,6 +22,8 @@
 
 <script>
 import axios from 'axios'
+import { mapActions } from 'vuex'
+
 
 export default {
   name: 'Profile',
@@ -40,6 +43,9 @@ export default {
       }
       return config
     },
+    ...mapActions([
+      'logout',
+    ]),
     getProfile: function () {
       axios({
         method: 'get',

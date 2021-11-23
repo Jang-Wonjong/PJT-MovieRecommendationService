@@ -16,6 +16,8 @@ urlpatterns = [
     path('review/<int:review_pk>/comment/<int:comment_pk>/', views.comment_update_or_delete),
     
     # my movie add
-    path('<int:movie_pk>/my-movie/', views.my_movie),
-    path('my-movies/', views.my_movies),
+    path('user-movies/<int:user_pk>/', views.user_movies),
+    path('<int:movie_pk>/user-movies/', views.user_movies_create_or_delete),
+
+    path('recommend-user/', views.recommend_user),
 ]
