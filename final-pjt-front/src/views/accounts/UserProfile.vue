@@ -19,8 +19,8 @@
     </div>
     <div v-else>
       <button @click="follow">팔로우</button>
-      <p>팔로워: {{ followersCounting }}, {{ followers }}</p>
-      <p>팔로잉: {{ followingsCounting }}, {{ followings }}</p>
+      <p>팔로잉: {{ followersCounting }}, {{ followers }}</p>
+      <p>팔로워: {{ followingsCounting }}, {{ followings }}</p>
     </div>
 
     <hr>
