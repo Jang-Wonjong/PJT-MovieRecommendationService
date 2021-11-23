@@ -1,78 +1,85 @@
 <template>
-  <div class="movie-detail">
-    <div 
-    class="movie-detail-image"
-    :style="{ backgroundImage: `url(${image(SelectedMovie.backdrop_path)})` }"
-    >
-    </div>
-    <div class="movie-content d-flex">
-      <div v-if="SelectedMovie" >
-          <img class="mt-2" :src="imgSrc" alt="" style="height: 80vh;">
-      </div>
-      <div class="ml-4 w-75">
-        <h1 class="h1Tag">{{ SelectedMovie.title }}</h1>
-        <div class="movie-information mt-3">
-           <span class="spanTag mt-3">{{ SelectedMovie }}</span>
-        </div>  
-        <p>{{this.$store.state.id}}</p>
-      </div>
-    </div>
-    <button v-if="!isUserMovie" @click="userMovieAdd">저장</button>  <!-- 내 영화 -->
-    <button v-else @click="userMovieRemove">저장 취소</button>
-
-    <div class="community-reviewTag">
-      <input 
-        type="text"
-        v-model.trim="reviewContent"
-        @keyup.enter="createReview"
+    <div class="container contain" v-if="SelectedMovie">
+      <div 
+      class="movie-detail-image"
+      :style="`background-image:url('https://image.tmdb.org/t/p/original${SelectedMovie.backdrop_path}');`"
       >
-      <button @click="createReview">리뷰 작성</button><br>
-    </div>
-    <div class="community-content">
-      <ul>
-        <li v-for="review in reviews" :key="review.id">
-          <span @click="moveToProfile(review.user_id)">정보: {{ review.user_id }}</span><br>
-          <span>리뷰: {{ review.content }}</span><br>
-          <span>평점: {{ review.rank }}</span><br>
-          <button @click="isReviewUpdate=true">수정</button>
-          <button @click="deleteReview(review)">삭제</button>
-          <div v-if="isReviewUpdate">
-            <input 
-              type="text"
-              v-model.trim="reviewContentUpdate"
-              @keyup.enter="updateReview(review)"
-            >
-            <button @click="updateReview(review)">저장</button>
-          </div>
-          
-          <button @click="getComments(review)">댓글 보기</button>
-          <div>
-            <input 
-              type="text"
-              v-model.trim="commentContent"
-              @keyup.enter="createComment(review)"
-            >
-            <button @click="createComment(review)">댓글 생성</button>
-            <li v-for="comment in comments" :key="comment.id">
-              <span>댓글: {{ comment }}</span><br>
+      </div>
+      <div class="movie-content d-flex">
+        <img class="mt-2" :src="imgSrc" alt="" style="height: 80vh;">
+        <div class="ml-4 w-75">
+          <h1 class="h1Tag">{{ SelectedMovie.title }}</h1>
+          <div class="movie-information mt-3">
+            <span class="spanTag mt-3">{{ SelectedMovie }}</span>
+          </div>  
+          <p>{{this.$store.state.id}}</p>
+        </div>
+        <div>
+          <label class="like">
+            <input type="checkbox" 
+              v-model="isUserMovie"
+              @click="userMovie"
+            />
+            <div class="hearth"/>
+          </label>
+        </div>
+      </div>
+
+      <div class="community-reviewTag">
+        <input 
+          type="text"
+          v-model.trim="reviewContent"
+          @keyup.enter="createReview"
+        >
+        <button @click="createReview">리뷰 작성</button><br>
+      </div>
+      <div class="community-content">
+        <ul>
+          <li v-for="review in reviews" :key="review.id">
+            <span @click="moveToProfile(review.user_id)">정보: {{ review.user_id }}</span><br>
+            <span>리뷰: {{ review.content }}</span><br>
+            <span>평점: {{ review.rank }}</span><br>
+            <button @click="isReviewUpdate=true">수정</button>
+            <button @click="deleteReview(review)">삭제</button>
+            <div v-if="isReviewUpdate">
               <input 
                 type="text"
-                v-model.trim="commentContentUpdate"
-                @keyup.enter="updateComment(review, comment)"
+                v-model.trim="reviewContentUpdate"
+                @keyup.enter="updateReview(review)"
               >
-              <button @click="updateComment(review, comment)">수정</button>
-              <button @click="deleteComment(review, comment)">삭제</button>
-            </li>
-          </div>
-          <hr>
-        </li>
-      </ul>
+              <button @click="updateReview(review)">저장</button>
+            </div>
+            
+            <button @click="getComments(review)">댓글 보기</button>
+            <div>
+              <input 
+                type="text"
+                v-model.trim="commentContent"
+                @keyup.enter="createComment(review)"
+              >
+              <button @click="createComment(review)">댓글 생성</button>
+              <li v-for="comment in comments" :key="comment.id">
+                <span>댓글: {{ comment }}</span><br>
+                <input 
+                  type="text"
+                  v-model.trim="commentContentUpdate"
+                  @keyup.enter="updateComment(review, comment)"
+                >
+                <button @click="updateComment(review, comment)">수정</button>
+                <button @click="deleteComment(review, comment)">삭제</button>
+              </li>
+            </div>
+            <hr>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
 </template>
 
 <script>
 import axios from 'axios'
+import { mapGetters } from 'vuex'
+
 
 export default {
   name: 'MovieDetail',
@@ -99,20 +106,12 @@ export default {
       console.log();
       return `https://image.tmdb.org/t/p/original/${img}`;
     },
-
-    setToken: function () {
-      const token = localStorage.getItem('jwt')
-      const config = {
-        Authorization: `JWT ${token}`
-      }
-      return config
-    },
     // movie
     getMovie: function () {
       axios({
         method: 'get',
         url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}`,
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           // console.log(res)
@@ -127,7 +126,7 @@ export default {
       axios({
         method: 'get',
         url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/review/`,
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           console.log(res)
@@ -146,7 +145,7 @@ export default {
         method: 'post',
         url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/review/`,
         data: reviewItem,
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           console.log(res)
@@ -163,7 +162,7 @@ export default {
       axios({
         method: 'delete',
         url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/review/${review.id}/`,
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           console.log(res)
@@ -182,7 +181,7 @@ export default {
         method: 'put',
         url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/review/${review.id}/`,
         data: reviewItem,
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           console.log(res)
@@ -198,7 +197,7 @@ export default {
       axios({
         method: 'get',
         url: `http://127.0.0.1:8000/movie/review/${review.id}/comment/`,
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           // console.log(res)
@@ -217,7 +216,7 @@ export default {
         method: 'post',
         url: `http://127.0.0.1:8000/movie/review/${review.id}/comment/`,
         data: commentItem,
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           // console.log(res)
@@ -233,7 +232,7 @@ export default {
       axios({
         method: 'delete',
         url: `http://127.0.0.1:8000/movie/review/${review.id}/comment/${comment.id}/`,
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           console.log(res)
@@ -252,7 +251,7 @@ export default {
         method: 'put',
         url: `http://127.0.0.1:8000/movie/review/${review.id}/comment/${comment.id}/`,
         data: commentItem,
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           console.log(res)
@@ -263,11 +262,18 @@ export default {
         })
       this.commentContentUpdate = null
     },
+    userMovie: function () {
+      if (this.isUserMovie) {
+        this.userMovieRemove()
+      } else {
+        this.userMovieAdd()
+      }
+    },
     userMovieAdd: function () {
       axios({
         method: 'post',
         url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/user-movies/`,
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           console.log(res)
@@ -282,7 +288,7 @@ export default {
       axios({
         method: 'delete',
         url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/user-movies/`,
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           console.log(res)
@@ -310,18 +316,32 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'config',
+    ]),
     imgSrc: function () {
       return 'https://image.tmdb.org/t/p/w400' + this.SelectedMovie.poster_path
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped>
-  .is-completed {
-    text-decoration: line-through;
-    color: rgb(112, 112, 112);
-  }
+.contain {
+  position: relative;
+  padding: 40px 40px;
+}
+
+.movie-content {
+  position: relative;
+  border: white;
+  z-index: 999;
+}
+  
+.is-completed {
+  text-decoration: line-through;
+  color: rgb(112, 112, 112);
+}
 
 /* 영화 제목 폰트 수정 */
 .h1Tag {
@@ -371,12 +391,6 @@ export default {
 }
 
 /* 영화 디테일 구역 */
-.movie-content {
-  position: relative;
-  z-index: 999;
-}
-
-/* 영화 디테일 구역 */
 .movie-information {
   max-width: 80%;
   font-size: 14px;
@@ -384,11 +398,6 @@ export default {
   margin: auto;
 }
 
-/* 영화 디테일 구역 */
-.movie-detail {
-  position: relative;
-  padding: 40px 40px;
-}
 
 /* 영화 디테일 구역 */
 .h1Tag {
