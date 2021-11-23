@@ -14,14 +14,15 @@
           </div>  
           <p>{{this.$store.state.id}}</p>
         </div>
-        <div>
-          <label class="like">
-            <input type="checkbox" 
-              v-model="isUserMovie"
-              @click="userMovie"
-            />
-            <div class="hearth"/>
-          </label>
+        <div class="outerDivFull" >
+          <div class="switchToggle">
+              <input type="checkbox" 
+                id="switch"
+                v-model="isUserMovie"
+                @click="userMovie"
+              >
+              <label for="switch"></label>
+          </div>
         </div>
       </div>
 
