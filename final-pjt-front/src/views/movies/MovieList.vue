@@ -41,7 +41,7 @@ export default {
         })
     },
     moveToDetail: function (movieId) {
-      // console.log(movieId)
+      console.log(movieId)
       this.$router.push({
         name: 'MovieDetail',
         query: { movieId }  

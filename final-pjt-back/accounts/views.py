@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -34,11 +35,20 @@ def signup(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def login_info(request, username):
+    user = get_object_or_404(get_user_model(), username=username)
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([AllowAny])
-def profile(request):
+def profile(request, user_pk):
     if request.method == 'GET':
-        serializer = UserProfileSerializer(request.user)
+        user = get_object_or_404(get_user_model(), pk=user_pk)
+        serializer = UserSerializer(user)
         return Response(serializer.data)
 
     elif request.method == 'PUT':
@@ -51,6 +61,76 @@ def profile(request):
             return Response(serializer.data)
 
     elif request.method == 'DELETE':
-        user_pk = request.user.pk
+        user = request.user.pk
         request.user.delete()
-        return Response({ 'delete': f'{user_pk}번 회원이 탈퇴했습니다.' }, status=status.HTTP_204_NO_CONTENT)
+        return Response({ 'delete': f'{user}번 회원이 탈퇴했습니다.' }, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def follow(request, you_pk):
+    # me = get_user_model().objects.get(id=me_pk)
+    # you = get_user_model().objects.get(id=you_pk)
+    # if me != you:
+    #     if you in me.followings.all():
+    #         me.followings.remove(you)
+    #     else:
+    #         me.followings.add(you)
+    me = request.user
+    you = get_object_or_404(get_user_model(), pk=you_pk)
+    
+    if me != you:
+ 
+        if you.followers.filter(pk=me.pk).exists():
+        # 언팔로우
+            you.followers.remove(me)
+        else:
+        # 팔로우
+            you.followers.add(me)
+    
+        return Response("follow success") 
+
+
+@api_view(['GET'])
+def followings(request, me_pk):
+    user = get_user_model().objects.get(pk=me_pk)
+    follows = user.followings.all().order_by('id')
+    data = []
+    for follow in follows:
+        box={}
+        box['id'] = follow.id
+        box['username'] = follow.username
+        box['nickname'] = follow.nickname
+        # if follow.userImage == 'undefined':
+        #     box['img'] = None
+        # else:
+        #     box['img'] = str(follow.userImage)
+        data.append(box)
+    return Response(data)
+
+
+@api_view(['GET'])
+def followers(requets, me_pk):
+    me = get_user_model().objects.get(pk=me_pk)
+    data = []
+    print(me.username)
+    user = get_user_model().objects.all().order_by('id')
+    for i in user:
+        if me.username != i.username:
+            box = {}
+            flag = 0
+            follower = i.followings.all()
+            for j in follower:
+                if j.username == me.username:
+                    flag = 1
+                    box['id'] = i.id
+                    box['username'] = i.username
+                    box['nickname'] = i.nickname
+                    # if i.username == 'undefined':
+                    #     box['img'] = None
+                    # else:
+                    #     box['img'] = str(i.userImage)
+                    break
+            if flag:
+                data.append(box)
+    return Response(data)

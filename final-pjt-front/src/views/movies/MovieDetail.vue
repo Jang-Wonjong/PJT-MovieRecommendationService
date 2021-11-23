@@ -5,10 +5,10 @@
       <img :src="imgSrc" alt="">
     </div>
     <span>{{ SelectedMovie }}</span>
-
+    <p>{{this.$store.state.id}}</p>
   
-    <button v-if="!isMyMovie" @click="myMovieAdd">저장</button>  <!-- 내 영화 -->
-    <button v-else @click="myMovieRemove">저장 취소</button>
+    <button v-if="!isUserMovie" @click="userMovieAdd">저장</button>  <!-- 내 영화 -->
+    <button v-else @click="userMovieRemove">저장 취소</button>
 
     <div>
       <input 
@@ -21,6 +21,7 @@
     <div>
       <ul>
         <li v-for="review in reviews" :key="review.id">
+          <span @click="moveToProfile(review.user_id)">정보: {{ review.user_id }}</span><br>
           <span>리뷰: {{ review.content }}</span><br>
           <span>평점: {{ review.rank }}</span><br>
           <button @click="isReviewUpdate=true">수정</button>
@@ -79,7 +80,7 @@ export default {
       commentContent: null,
       commentContentUpdate: null,
 
-      isMyMovie: false,
+      isUserMovie: false,
     }
   },
   methods: {
@@ -113,7 +114,7 @@ export default {
         headers: this.setToken()
       })
         .then(res => {
-          // console.log(res)
+          console.log(res)
           this.reviews = res.data
         })
         .catch(err => {
@@ -132,7 +133,7 @@ export default {
         headers: this.setToken()
       })
         .then(res => {
-          // console.log(res)
+          console.log(res)
           this.reviews += res.data
           this.getReviews()
         })
@@ -246,35 +247,41 @@ export default {
         })
       this.commentContentUpdate = null
     },
-    myMovieAdd: function () {
+    userMovieAdd: function () {
       axios({
         method: 'post',
-        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/my-movie/`,
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/user-movies/`,
         headers: this.setToken()
       })
         .then(res => {
           console.log(res)
-          this.isMyMovie = true
+          this.isUserMovie = true
           // this.getMovie()
         })
         .catch(err => {
           console.log(err)
         })
     },
-    myMovieRemove: function () {
+    userMovieRemove: function () {
       axios({
         method: 'delete',
-        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/my-movie/`,
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/user-movies/`,
         headers: this.setToken()
       })
         .then(res => {
           console.log(res)
-          this.isMyMovie = false
+          this.isUserMovie = false
           // this.getMovie()
         })
         .catch(err => {
           console.log(err)
         })
+    },
+    moveToProfile: function (userId) {
+      this.$router.push({
+        name: 'UserProfile',
+        query: { userId }  
+      })
     }
   },
   created: function () {

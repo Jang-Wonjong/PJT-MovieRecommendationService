@@ -2,43 +2,23 @@
   <div id="app">
     <h1 id='logo'>Movie&Chill</h1>
     <div id="nav" class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <span v-if="isLogin">
-        <router-link :to="{ name: 'MovieList' }">MovieList</router-link> |
-        <router-link @click.native="logout" to="#">Logout</router-link> |
-        <router-link :to="{ name: 'Profile' }">Profile</router-link>
+      <router-link :to="{ name: 'Main' }">Main</router-link> |
+      <span v-if="this.$store.state.isLogin">
+        <router-link :to="{ name: 'RecommendUser' }">RecommendUser</router-link> |
+        <router-link :to="{ name: 'MovieList' }">MovieList</router-link>
       </span>
       <span v-else>
         <router-link :to="{ name: 'Signup' }">Signup</router-link> |
         <router-link :to="{ name: 'Login' }">Login</router-link> |
       </span>
     </div>
-    <router-view @login="isLogin=true"/>
+    <router-view @login="this.$store.state.isLogin=true"/>
   </div>
 </template>
 
 <script>
 export default {
   name: 'App',
-  data: function () {
-    return {
-      isLogin: false,
-    }
-  },
-  methods: {
-    logout: function () {
-      this.isLogin = false
-      localStorage.removeItem('jwt')
-      this.$router.push({ name: 'Login' })
-    },
-    
-  },
-  created: function () {
-    const token = localStorage.getItem('jwt')
-
-    if (token) {
-      this.isLogin = true
-    }
-  }
 }
 </script>
 

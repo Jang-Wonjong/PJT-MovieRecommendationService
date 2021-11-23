@@ -23,36 +23,22 @@
 </template>
 
 <script>
-import axios from 'axios'
+
 
 export default {
-  name: 'Signup',
+  name: 'Login',
   data: function () {
     return {
       credentials: {
         username: null,
         password: null,
-        passwordConfirmation: null,
       }
     }
   },
   methods: {
-    login: function () {
-      axios({
-        method: 'post',
-        url: 'http://127.0.0.1:8000/accounts/api-token-auth/',
-        data: this.credentials
-      })
-        .then(res => {
-          // console.log(res)
-          localStorage.setItem('jwt', res.data.token)
-          this.$emit('login')
-          this.$router.push({ name: 'MovieList' })
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
+    login() {
+      this.$store.dispatch('login', this.credentials)
+    },
   }
 }
 </script>
