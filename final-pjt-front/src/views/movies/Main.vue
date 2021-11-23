@@ -11,7 +11,7 @@
         <button @click="moveToLogin" class="btn login-button-color">입장</button>
       </div>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>

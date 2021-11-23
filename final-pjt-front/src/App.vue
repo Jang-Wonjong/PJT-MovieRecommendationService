@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
       <div class="container-fluid">
         <div class="cursor" @click="MoveTo">
           <img src="logo.png" alt="LOGO" width="150" height="30" class="logoTag">
@@ -11,10 +11,9 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <span v-if="this.$store.state.isLogin">
-              <router-link class="nav-link active" :to="{ name: 'RecommendUser' }">RecommendUser</router-link>
-              <router-link class="nav-link active" :to="{ name: 'MovieList' }">MovieList</router-link>
+              <router-link class="nav-link active d-flex" :to="{ name: 'RecommendUser' }">RecommendUser</router-link>
+              <!-- <router-link class="nav-link active" :to="{ name: 'MovieList' }">MovieList</router-link> -->
             </span>
-
           </div>
         </div>
       </div>

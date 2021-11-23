@@ -1,26 +1,28 @@
 <template>
   <div>
+    <!-- <div id="aaa" class="movie-detail-image"> -->
+      <!-- <img src="https://mblogthumb-phinf.pstatic.net/20140128_271/dmsql993_1390916584721HWswN_GIF/tumblr_mznavgohkc1sbcetxo1_500.gif?type=w2" alt=""> -->
+    <!-- </div> -->
     <section class="wrapper">
       <div class="container">
-  
         <div class="row">
-          <div class="col-md-4">
-            <div class="card text-white card-has-bg click-col" style="background-image:url('https://source.unsplash.com/600x900/?tech,street');">
-              <img class="card-img d-none" src="https://source.unsplash.com/600x900/?tech,street" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
-              <div class="card-img-overlay d-flex flex-column">
+          <div class="col-md-3 d-flex" v-for="movie in movies" :key="movie.id">
+            <div class="card text-white card-has-bg click-col" :style="`background-image:url('https://image.tmdb.org/t/p/w400${movie.poster_path}');`">
+              <img class="card-img d-none" :src="`https://image.tmdb.org/t/p/w400${movie.poster_path}`" alt="movie_poster">
+              <div class="card-img-overlay d-flex flex-column movie-font" @click="moveToDetail(movie.id)">
                 <div class="card-body">
-                  <small class="card-meta mb-2">Thought Leadership</small>
-                    <h4 class="card-title mt-0 "><a class="text-white" herf="#">Goverment Lorem Ipsum Sit Amet Consectetur dipisi?</a></h4>
-                  <small><i class="far fa-clock"></i> October 15, 2020</small>
+                  <small class="card-meta mb-2">{{ movie.original_title }}</small>
                 </div>
                 <div class="card-footer">
-                  <div class="media">
+                  <h4 class="card-title mt-0 fs-6">{{ movie.title }}</h4>
+                  <!-- <small><i class="far fa-clock"></i>{{ movie.release_date }}</small> -->
+                  <!-- <div class="media">
                     <img class="mr-3 rounded-circle" src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/male-512.png" alt="Generic placeholder image" style="max-width:50px">
                     <div class="media-body">
                       <h6 class="my-0 text-white d-block">Oz COruhlu</h6>
                       <small>Director of UI/UX</small>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -29,17 +31,12 @@
       </div>
     </section>
   </div>
-  <!-- <div>
-    <ul>
-      <li v-for="movie in movies" :key="movie.id" class="liTag">
-        <span @click="moveToDetail(movie.id)">{{ movie.title }}</span>
-      </li>
-    </ul>
-  </div> -->
 </template>
 
 <script>
 import axios from 'axios'
+import { mapGetters } from 'vuex'
+
 
 export default {
   name: 'MovieList',
@@ -49,18 +46,11 @@ export default {
     }
   },
   methods: {
-    setToken: function () {
-      const token = localStorage.getItem('jwt')
-      const config = {
-        Authorization: `JWT ${token}`
-      }
-      return config
-    },
     getMovies: function () {
       axios({
         method: 'get',
         url: 'http://127.0.0.1:8000/movie/list/',
-        headers: this.setToken()
+        headers: this.config
       })
         .then(res => {
           // console.log(res)
@@ -84,16 +74,56 @@ export default {
     } else {
       this.$router.push({ name: 'Login' })
     }
-  }
+  },
+  computed: {
+    ...mapGetters([
+      'config',
+    ]),
+  },
 }
 </script>
 
-<style scoped>
+<style scoped> 
+/* #aaa {
+  background-size: cover;
+  background-image: url(https://thumbs.gfycat.com/AdoredWindingIberianbarbel.webp);
+  background-repeat: no-repeat;
+  background-size: cover;
+} */
+
+/* .movie-detail-image {
+  background-size: cover;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.movie-detail-image::after {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 100vh;
+  background-color: rgb(40, 40, 40);
+  opacity: 0.6;
+  content: "";
+  display: block;
+} */
+
 .liTag {
   cursor: pointer;
 }
 
 .liTag:hover {
   background-color: #d63384;
+}
+
+.movie-font {
+  font-family: 'Noto Sans KR', sans-serif;
 }
 </style>
