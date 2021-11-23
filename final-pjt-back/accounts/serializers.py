@@ -5,11 +5,10 @@ from django.contrib.auth import get_user_model
 class UserSerializer(serializers.ModelSerializer):
     id = serializers.CharField(read_only=True)
     password = serializers.CharField(write_only=True)
-    # followers = serializers.
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'username', 'password', 'nickname', 'followings')
+        fields = ('id', 'username', 'password', 'nickname', )   # followings 넣으면 가입 안됨
         # fields = '__all__'
 
 

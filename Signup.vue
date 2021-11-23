@@ -49,7 +49,7 @@ export default {
   name: 'Signup',
   data: function () {
     return {
-      credentials: {
+      singup: {
         username: null,
         nickname: null,
         password: null,
