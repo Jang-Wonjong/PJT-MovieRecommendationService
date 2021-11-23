@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Signup from '@/views/accounts/Signup'
-import Login from '@/views/accounts/Login'
+import Sign from '@/views/accounts/Sign'
 import UserProfile from '@/views/accounts/UserProfile'
 import Main from '@/views/movies/Main'
 import MovieList from '@/views/movies/MovieList'
@@ -13,24 +12,19 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/signup',
-    name: 'Signup',
-    component: Signup
+    path: '/',
+    name: 'Main',
+    component: Main
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    path: '/sign',
+    name: 'Sign',
+    component: Sign
   },
   {
     path: '/user-profile',
     name: 'UserProfile',
     component: UserProfile
-  },
-  {
-    path: '/',
-    name: 'Main',
-    component: Main
   },
   {
     path: '/movies',

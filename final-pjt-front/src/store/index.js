@@ -87,7 +87,20 @@ export default new Vuex.Store({
     },
     logout: function ({ commit }) { // 로그아웃
       commit("REMOVE_TOKEN")
-      router.push({ name: "Login" })
+      router.push({ name: "Main" })
+    },
+    signup: function (context, credentials) {
+      axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8000/accounts/signup/',
+        data: credentials
+      })
+        .then(() => { // 회원가입 시 자동 로그인
+          this.dispatch("login", credentials)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     profileUpdate: function ({ commit }, profileItem) {
       const nickname = profileItem.nickname
