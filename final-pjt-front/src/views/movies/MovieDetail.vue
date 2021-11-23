@@ -1,16 +1,26 @@
 <template>
-  <div>
-    <h1>DETAIL</h1>
-    <div v-if="SelectedMovie">
-      <img :src="imgSrc" alt="">
+  <div class="movie-detail">
+    <div 
+    class="movie-detail-image"
+    :style="{ backgroundImage: `url(${image(SelectedMovie.backdrop_path)})` }"
+    >
     </div>
-    <span>{{ SelectedMovie }}</span>
-    <p>{{this.$store.state.id}}</p>
-  
+    <div class="movie-content d-flex">
+      <div v-if="SelectedMovie" >
+          <img class="mt-2" :src="imgSrc" alt="" style="height: 80vh;">
+      </div>
+      <div class="ml-4 w-75">
+        <h1 class="h1Tag">{{ SelectedMovie.title }}</h1>
+        <div class="movie-information mt-3">
+           <span class="spanTag mt-3">{{ SelectedMovie }}</span>
+        </div>  
+        <p>{{this.$store.state.id}}</p>
+      </div>
+    </div>
     <button v-if="!isUserMovie" @click="userMovieAdd">저장</button>  <!-- 내 영화 -->
     <button v-else @click="userMovieRemove">저장 취소</button>
 
-    <div>
+    <div class="community-reviewTag">
       <input 
         type="text"
         v-model.trim="reviewContent"
@@ -18,7 +28,7 @@
       >
       <button @click="createReview">리뷰 작성</button><br>
     </div>
-    <div>
+    <div class="community-content">
       <ul>
         <li v-for="review in reviews" :key="review.id">
           <span @click="moveToProfile(review.user_id)">정보: {{ review.user_id }}</span><br>
@@ -84,6 +94,12 @@ export default {
     }
   },
   methods: {
+     // 포스터 배경 백드롭 이미지 불러오는 함수
+    image(img) {
+      console.log();
+      return `https://image.tmdb.org/t/p/original/${img}`;
+    },
+
     setToken: function () {
       const token = localStorage.getItem('jwt')
       const config = {
@@ -306,4 +322,92 @@ export default {
     text-decoration: line-through;
     color: rgb(112, 112, 112);
   }
+
+/* 영화 제목 폰트 수정 */
+.h1Tag {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 영화 정보 폰트랑 위치 */
+.spanTag {
+  font-family: 'Noto Sans KR', sans-serif;
+  text-align: left;
+}
+
+/* 리뷰 폰트 */
+.reviewTag {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 댓글 폰트 */
+.commentTag {
+  font-family: 'Sunflower', sans-serif;
+}
+
+/* 포스터 백그라운드 이미지 설정 */
+.movie-detail-image {
+  background-size: cover;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+/* 포스터 백그라운드 이미지 설정 */
+.movie-detail-image::after {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 100vh;
+  background-color: rgb(40, 40, 40);
+  opacity: 0.7;
+  content: "";
+  display: block;
+}
+
+/* 영화 디테일 구역 */
+.movie-content {
+  position: relative;
+  z-index: 999;
+}
+
+/* 영화 디테일 구역 */
+.movie-information {
+  max-width: 80%;
+  font-size: 14px;
+  color: #dddddddd;
+  margin: auto;
+}
+
+/* 영화 디테일 구역 */
+.movie-detail {
+  position: relative;
+  padding: 40px 40px;
+}
+
+/* 영화 디테일 구역 */
+.h1Tag {
+  margin-left: 5px;
+  color: #fff;
+}
+
+/* 리뷰 구역 */
+.community-content {
+  position: relative;
+  z-index: 99;
+  color: #fff;
+}
+
+/* 댓글 구역 */
+.community-reviewTag {
+  position: relative;
+    z-index: 99;
+    color: #fff;
+}
+
 </style>

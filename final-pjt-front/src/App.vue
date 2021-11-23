@@ -33,8 +33,11 @@ export default {
 }
 
 #nav {
+  text-align: center;
   padding: 10px;
-  
+  position: relative;
+  z-index: 99;
+  background-color: black;
 }
 
 #nav a {
