@@ -19,6 +19,7 @@ export default new Vuex.Store({
     username: null,
     nickname: null,
     isLogin: false,
+    // isCheckMe: false,
   },
   getters: {
     config: function (state) {
@@ -48,6 +49,9 @@ export default new Vuex.Store({
       state.nickname = data.nickname
       // state.image = data.image
     },
+    // CHECK_ON: function (state) {
+    //   state.isCheckMe = true
+    // }
   },
   actions: {
     login: function ({ commit }, credentials) { // 로그인
@@ -102,10 +106,13 @@ export default new Vuex.Store({
           console.log(err)
         })
     },
+    // checkOn: function ({commit}) {
+    //   commit("CHECK_ON")
+    // },
     profileUpdate: function ({ commit }, profileItem) {
       const nickname = profileItem.nickname
       // const image = `${SERVER.URL}` + res.data.image
-      commit("UPDATE_PROFILE", { nickname });
+      commit("UPDATE_PROFILE", { nickname })
     },
   },
   modules: {

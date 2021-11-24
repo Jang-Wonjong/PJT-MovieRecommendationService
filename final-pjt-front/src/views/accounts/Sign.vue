@@ -47,7 +47,7 @@
                       <button class="button" @click="signup">SIGN UP</button>
                     </div>
                     <div class="hr"></div>
-                    <div class="foot"> <label for="tab-1">Already Member?</label> </div>
+                    <!-- <div class="foot"> <label for="tab-1">Already Member?</label> </div> -->
                   </div>
                 </div>
               </div>

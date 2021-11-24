@@ -1,60 +1,69 @@
 <template>
   <div>
-    <div class="m-4 p-3 d-flex justify-content-center">
+    <!-- background -->
+    <!-- <div class="movie-detail-image">
+      <img src="https://thumbs.gfycat.com/AdoredWindingIberianbarbel.webp" alt="">
+    </div> -->
+
+    <div class="m-4 p-3 d-flex justify-content-center" v-if="userProfile">
       <div class="card-profile p-4">
         <div class=" image d-flex flex-column justify-content-center align-items-center"> 
-          <button class="btn-profile btn-secondary"> <img src="https://i.imgur.com/wvxPV9S.png" height="100" width="100" /></button> <span class="name mt-3">Eleanor Pena</span> <span class="idd">@eleanorpena</span>
+          <button class="btn-profile btn-secondary"> <img src="https://i.imgur.com/wvxPV9S.png" height="100" width="100" /></button>
+          <span class="name mt-3">{{ userProfile.nickname }}</span> 
+          <div v-if="isUpdateOn">
+            <input type="text"
+              v-model.trim="nicknameUpdate"
+              @keyup.enter="updateProfile(userProfile)"
+            >
+            <button @click="updateProfile(userProfile)">SAVE</button>
+          </div>
+          <!-- <span class="idd">@eleanorpena</span>
           <div class="d-flex flex-row justify-content-center align-items-center gap-2"> 
             <span class="idd1">Oxc4c16a645_b21a</span> <span><i class="fa fa-copy"></i></span> 
-          </div>
+          </div> -->
           <div class="d-flex flex-row justify-content-center align-items-center mt-3"> 
-            <span class="number">1069 <span class="follow">Followers</span></span> 
+            <span class="number mx-3">{{ followersCounting }} <span class="follow">Followers</span></span>
+            <span class="number mx-3">{{ followingsCounting }} <span class="follow">Followings</span></span> 
           </div>
-          <div class="d-flex flex-row justify-content-center align-items-center mt-3"> 
-            <span class="number">1069 <span class="follow">Followers</span></span> 
+          <div class=" d-flex mt-2" v-if="!isSelf"> 
+            <button class="btn-profile1 btn-dark" @click="follow">Follow</button> 
           </div>
-          <div class=" d-flex mt-2"> 
-            <button class="btn-profile1 btn-dark">Edit Profile</button> 
-          </div>
-          <div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center"> 
+          <!-- <div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center"> 
             <span><i class="fa fa-twitter"></i></span> <span><i class="fa fa-facebook-f"></i></span> <span><i class="fa fa-instagram"></i></span> <span><i class="fa fa-linkedin"></i></span>
+          </div> -->
+        </div>
+      </div>
+      <div v-if="isSelf">
+        <button 
+          class="btn btn-primary btn-circle btn-circle-sm m-1"
+          @click="isUpdateOn=true"
+          >
+          <i class="fa fa-cog"></i>
+        </button><br>
+        <button class="btn btn-warning btn-circle btn-circle-sm m-1" @click="logout"><i class="fa fa-sign-out-alt"></i></button><br>
+        <button class="btn btn-danger btn-circle btn-circle-sm m-1" @click="deleteProfile"><i class="fa fa-user-alt-slash"></i></button>
+      </div>
+    </div>
+    
+
+    <hr>
+
+    <!-- movies -->
+    <div class="team-grid">
+      <div class="mx-5">
+        <div class="intro">
+          <h2 class="text-center">Movie Collection</h2>
+        </div>
+        <div class="row people d-flex justify-content-center">
+          <div class="col-md-4 col-lg-3 item" v-for="usermovie in userMovies" :key="usermovie.user_id">
+            <div class="box" :style="`background-image:url('https://image.tmdb.org/t/p/original${usermovie.poster_path}');`">
+              <div class="cover">
+                <h3 class="name">{{ usermovie.title }}</h3>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- <div class="contain">
-      <div class="card">
-        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxEHBhAIBw8OFRUODw8QEBMSEBAPEA4SFhMWFhYSFx8YHTQgGRoxHRMTITEhJSkuLi4uFx8zODMsNyktLisBCgoKDg0OGhAQGjYlHyU1Ky0tKy0wKy0tLi0tLS0rLS0tLS0tLS0tKy03NystLSsrNS0tLS03Kzc3LS0rLS0tN//AABEIAOEA4QMBIgACEQEDEQH/xAAaAAEAAgMBAAAAAAAAAAAAAAAABAUCAwYB/8QAMxABAAECAwUFBwQDAQAAAAAAAAECAwQRcQUhMTJBEhNRYXI0gZGhsdHhIkKSwSMzghT/xAAZAQEBAQEBAQAAAAAAAAAAAAAAAwIBBAX/xAAcEQEBAQEBAQEBAQAAAAAAAAAAAQIRAzESQSH/2gAMAwEAAhEDEQA/AOsAe980AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHvHgscLs/d27/8fu5bx2S1At2qrk5W4mdISKdn3J6RGs/ZbUxFMZUxlo9Y/ak84qJ2fcjhETpLRcs1Wv8AZTMfRfExnGUn7L5xzotMVs+Ko7VjdPh0nTwVkx2Zyno3L1O5seAOuAAAAAAAAAAAAAAAAAAANlm33t2KI6yCds3DZR39f/Pl5rAiMoyjoJW9Xk5ABx0AAQto4bt0d7Rxjj5wmhLws7HOjdirXc36qI8d2ktKzzgAAAAAAAAAAAAAAAAACZsunPE5+FMz/X9oabsqcsRMeNM/WHNfHc/VqAkuAAAAAAq9rU5XqavGnL4T+UFYbWn/ACUx5T9fwr1c/ENfQB1wAAAAAAAAAAAAAAAAbsJc7rEU1T45TpO5pAjohFwGI7612auNO6fOPFKRv+PRL0AAAABoxl/uLOccZ3U/cLeK3H3O8xU5dP0/D85oz14tHnt6AAAAAAAAAAAAAAAAAAAAztXJtVxXRxhcYXFU4iMuE9Y+ykexOW+HLOu51x0IqLW0K7cZVZVa8fik07Tp/dTV7piWPzVZuJwgztOn9tNXvyhHu7Qrr3UZU6b5c/NLuLDEYmmxT+rj0jrKnvXZvXO3X+IjwYTPanOp4pM8T1roA6yAAAAAAAAAAAAAAAAAAAAAADKmmauWJnSM2cWK54UV/wAZBqG2cPXHGiv+MsJomnmiY1jIOMQAAAAAAAAAAAAAAAAAAABnatTdq7NuM/6WVjZ0U772+fDp+XLZHZm1W0W5uTlREzpCVb2dVVvrmI+crSmmKYypiI03PWLtSec/qJb2dRTzZz78o+TfRYoo5aafhvbBztakkAHHQAGFVmmvmppn3Q0V7Poq4RMaT90oOlkqsubNmN9uqJ13SiXbNVqcrkTH0XxMZxlLU1WLiOdFtf2fTXvt/pn5K69Yqs1ZXI0npLcsqdzY1AOuAAAAAAAAAADdhcPOIudmOEcZ8GleYSz3NiKevGdXNXjWc9rOzaizR2bcfedWYJLAAAAAAAAAAAADyuiK6ezXGcS9AU2Mwv8A56s6eWeHl5Iy/vW4u2poq6/LzUMx2ZynpuUzeo7zyvAGmQAAAAAAAHtPNGroXPU80aw6FjanmAMKAAAAAAAAAAAAAACixW7E1+qfqvVHi/aq/VLeGPT40gNpAAAAAAAAMqeaNYdA5+nmjWHQMbU8wBhQAAAAAAAAAAAAAAUeL9qr9UrxR4v2qv1S3hj0+NIDaQAAAAAAADKnmjWHQOfo541h0DG1PMAYUAAAAAAAAAAAAAAFHi/aq/VK8UeL9qr9Ut4Y9PjSA2kAAAAAAAAyo541h0AMbU8wBhQAAAAAAAAAAAAAAUeL9qr9Ug3hj0+NIDaQAAAD/9k=" class="rounded mx-auto d-block" alt="...">
-        <h1>{{ userProfile.nickname }} PROFILE</h1>
-      </div>
-    </div> -->
-    {{ youId }}
-    <br>
-    {{ userProfile }}
-
-    <hr>
-
-    <div v-if="isSelf">
-      <input 
-        type="text"
-        v-model.trim="nicknameUpdate"
-        @keyup.enter="updateProfile(userProfile)"
-      >
-      <button @click="updateProfile(userProfile)">수정</button>
-      <br>
-      <button @click="deleteProfile">회원탈퇴</button>
-      <button @click="logout">로그아웃</button>
-    </div>
-    <div v-else>
-      <button @click="follow">팔로우</button>
-      <p>팔로잉: {{ followersCounting }}, {{ followers }}</p>
-      <p>팔로워: {{ followingsCounting }}, {{ followings }}</p>
-    </div>
-
-    <hr>
-
-    <div>
-        <span>{{ userMovies }}</span>
     </div>
   </div>
 </template>
@@ -62,10 +71,14 @@
 <script>
 import axios from 'axios'
 import { mapGetters, mapActions } from 'vuex'
+// import UserMovies from '@/components/UserMovies.vue'
 
 
 export default {
   name: 'UserProfile',
+  // components: {
+  //   UserMovies
+  // },
   data: function () {
     return {
       isSelf: false,
@@ -73,8 +86,10 @@ export default {
       userProfile: null,
       userMovies: null,
 
+      isUpdateOn: false,    // 업데이트 버튼 눌렀을 때
       nicknameUpdate: null,
 
+      isFollow: false,
       followers: null,
       followersCounting: null,
       followings: null,
@@ -93,7 +108,12 @@ export default {
       })
         .then(res => {
           console.log(res)
+          if (this.$store.state.id === this.youId) {
+            this.isSelf = true
+          }
           this.userProfile = res.data
+          this.getFollowers()
+          this.getFollowings()
           this.getUserMovies() // 유저가 저장한 영화 불러오기
         })
         .catch(err => {
@@ -114,6 +134,9 @@ export default {
           console.log(err)
         })
     },
+    updateInputOn: function () {
+
+    },
     updateProfile: function (userProfile) {
       // console.log(userProfile)
       const profileItem = {
@@ -131,6 +154,7 @@ export default {
           console.log(res)
           this.$store.dispatch('profileUpdate', profileItem)
           this.getProfile()
+          this.isUpdateOn = false
         })
         .catch(err => {
           console.log(err)
@@ -161,7 +185,7 @@ export default {
         .then(res => {
           console.log(res)
           // this.userMovies = res.data
-          // this.getProfile()
+          this.getProfile()
         })
         .catch(err => {
           console.log(err)
@@ -170,13 +194,18 @@ export default {
     getFollowers: function () {
       axios({
         method: 'get',
-        url: `http://127.0.0.1:8000/accounts/followers/${this.$store.state.id}/`,
+        url: `http://127.0.0.1:8000/accounts/followers/${this.youId}/`,
         headers: this.config
       })
         .then(res => {
           console.log(res)
           this.followers = res.data
           this.followersCounting = res.data.length
+          // for (let i in this.followers) {
+          //   if (i === this.$store.state.id) {
+          //     this.isFollow = true
+          //   }
+          // }
           // this.getProfile()
         })
         .catch(err => {
@@ -186,7 +215,7 @@ export default {
     getFollowings: function () {
       axios({
         method: 'get',
-        url: `http://127.0.0.1:8000/accounts/followings/${this.$store.state.id}/`,
+        url: `http://127.0.0.1:8000/accounts/followings/${this.youId}/`,
         headers: this.config
       })
         .then(res => {
@@ -207,14 +236,9 @@ export default {
   },
   created: function () {
     if (localStorage.getItem('jwt')) {
-      // console.log(this.$route.query.userId)
       this.youId = this.$route.query.userId
       this.getProfile()
-      this.getFollowers()
-      this.getFollowings()
-      if (this.$store.state.id === this.youId) {
-        this.isSelf = true
-      }
+
     } else {
       this.$router.push({ name: 'Login' })
     }
@@ -223,6 +247,7 @@ export default {
 </script>
 
 <style scoped>
+/* profill card */
 * {
   margin: 0;
   padding: 0
@@ -236,7 +261,7 @@ body {
   width: 350px;
   background-color: #efefef;
   border: none;
-  cursor: pointer;
+  /* cursor: pointer; */
   transition: all 0.5s
 }
 
@@ -312,4 +337,169 @@ hr .new1 {
   background-color: #ccc
 }
 
+
+/* button */
+.btn-circle {
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.btn-circle i {
+  position: relative;
+  top: -1px;
+}
+
+.btn-circle-sm {
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 0.9rem;
+}
+
+.btn-circle-lg {
+  width: 55px;
+  height: 55px;
+  line-height: 55px;
+  font-size: 1.1rem;
+}
+
+.btn-circle-xl {
+  width: 70px;
+  height: 70px;
+  line-height: 70px;
+  font-size: 1.3rem;
+}
+
+/* user movies */
+body {
+  background-image: linear-gradient(#3F51B5, #1A237E);
+  background-repeat: no-repeat;
+  color: #000;
+  overflow-x: hidden
+}
+
+p {
+    color: #fff
+}
+
+h2 {
+    font-weight: bold;
+    margin-bottom: 40px;
+    padding-top: 40px;
+    color: #fff
+}
+
+@media (max-width:767px) {
+    h2 {
+        margin-bottom: 25px;
+        padding-top: 25px;
+        font-size: 24px
+    }
+}
+
+.intro {
+    font-size: 16px;
+    max-width: 500px;
+    margin: 0 auto
+}
+
+.intro p {
+    margin-bottom: 0
+}
+
+.people {
+    padding: 50px 0;
+    cursor: pointer
+}
+
+.item {
+    margin-bottom: 30px
+}
+
+.item .box {
+    text-align: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    /* width: 200px; */
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+    /* object-fit: cover; */
+}
+
+.item .cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #d6338475;
+    transition: opacity 0.15s ease-in;
+    opacity: 0;
+    padding-top: 80px;
+    color: #fff;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15)
+}
+
+.item:hover .cover {
+    opacity: 1
+}
+
+.item .name {
+    font-weight: bold;
+    margin-bottom: 8px
+}
+
+.item .title {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #bbd8fb;
+    letter-spacing: 2px;
+    font-size: 13px;
+    margin-bottom: 20px
+}
+
+.social {
+    font-size: 18px
+}
+
+.social a {
+    color: inherit;
+    margin: 0 10px;
+    display: inline-block;
+    opacity: 0.7
+}
+
+.social a:hover {
+    opacity: 1
+}
+
+/* .movie-detail-image {
+  background-size: cover;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.movie-detail-image::after {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 100vh;
+  background-color: rgb(40, 40, 40);
+  opacity: 0.7;
+  content: "";
+  display: block;
+} */
 </style>

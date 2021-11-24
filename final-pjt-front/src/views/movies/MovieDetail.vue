@@ -1,95 +1,103 @@
 <template>
-    <div class="container contain" v-if="SelectedMovie">
-      <div 
-      class="movie-detail-image"
-      :style="`background-image:url('https://image.tmdb.org/t/p/original${SelectedMovie.backdrop_path}');`"
-      >
-      </div>
-      <div class="movie-content d-flex">
-        <img class="mt-2" :src="imgSrc" alt="" style="height: 80vh;">
-        <div class="ml-4 w-75">
-          <h1 class="h1Tag">{{ SelectedMovie.title }}</h1>
-          <div class="movie-information mt-3">
-            <span class="spanTag mt-3">{{ SelectedMovie }}</span>
-          </div>
-          <p>{{this.$store.state.id}}</p>
-        </div>
-        <!-- My movie -->
-        <div class="outerDivFull" >
-          <div class="switchToggle">
-              <input type="checkbox" 
-                id="switch"
-                v-model="isUserMovie"
-                @click="userMovie"
-              >
-              <label for="switch"></label>
-          </div>
+  <div class="container contain" v-if="SelectedMovie">
+    <div 
+    class="movie-detail-image"
+    :style="`background-image:url('https://image.tmdb.org/t/p/original${SelectedMovie.backdrop_path}');`"
+    >
+    </div>
+    <div class="movie-content d-flex">
+      <img class="mt-2" :src="imgSrc" alt="" style="height: 80vh;">
+      <div class="ml-4 w-75">
+        <h1 class="h1Tag">{{ SelectedMovie.title }}</h1><br>
+        <div class="movie-information mt-3">
+          <p class="spanTag mt-3">{{ SelectedMovie.original_title }}</p><br>
+          <p class="spanTag mt-3">{{ SelectedMovie.overview }}</p><br>
+          <p class="spanTag mt-3">개봉일 : {{ SelectedMovie.release_date }}</p><br>
         </div>
       </div>
-
-      <review class="movie-content"></review>
-      <div class="community-reviewTag">
-        <input 
-          type="text"
-          v-model.trim="reviewContent"
-          @keyup.enter="createReview"
-        >
-        <button @click="createReview">리뷰 작성</button><br>
-      </div>
-      <div class="community-content">
-        <ul>
-          <li v-for="review in reviews" :key="review.id">
-            <span @click="moveToProfile(review.user_id)">정보: {{ review.user_id }}</span><br>
-            <span>리뷰: {{ review.content }}</span><br>
-            <span>평점: {{ review.rank }}</span><br>
-            <button @click="isReviewUpdate=true">수정</button>
-            <button @click="deleteReview(review)">삭제</button>
-            <div v-if="isReviewUpdate">
-              <input 
-                type="text"
-                v-model.trim="reviewContentUpdate"
-                @keyup.enter="updateReview(review)"
-              >
-              <button @click="updateReview(review)">저장</button>
-            </div>
-            
-            <button @click="getComments(review)">댓글 보기</button>
-            <div>
-              <input 
-                type="text"
-                v-model.trim="commentContent"
-                @keyup.enter="createComment(review)"
-              >
-              <button @click="createComment(review)">댓글 생성</button>
-              <li v-for="comment in comments" :key="comment.id">
-                <span>댓글: {{ comment }}</span><br>
-                <input 
-                  type="text"
-                  v-model.trim="commentContentUpdate"
-                  @keyup.enter="updateComment(review, comment)"
-                >
-                <button @click="updateComment(review, comment)">수정</button>
-                <button @click="deleteComment(review, comment)">삭제</button>
-              </li>
-            </div>
-            <hr>
-          </li>
-        </ul>
+      <!-- My movie -->
+      <div class="outerDivFull" >
+        <div class="switchToggle">
+            <input type="checkbox" 
+              id="switch"
+              v-model="isUserMovie"
+              @click="userMovie"
+            >
+            <label for="switch"></label>
+        </div>
       </div>
     </div>
+
+    <!-- 리뷰 -->
+    <div class="justify-content-center mt-5 border-left border-right review-body">
+      <div class="d-flex justify-content-center pt-3 pb-2">
+        <input type="text" name="text" placeholder="add review" class="form-control addtxt"
+        v-model.trim="reviewContent"
+        @keyup.enter="createReview">
+      </div>
+        <div class="d-flex justify-content-center py-2" v-for="review in reviews" :key="review.id">
+          <div class="second py-2 px-2" >
+            <span class="text1">{{ review.content }}</span>
+            <div class="d-flex justify-content-between py-1 pt-2">
+              <span class="text2" @click="moveToProfile(review.user_id)">user : {{ review.user_id }}</span><br>
+            <div>
+            <div class="d-flex"> 
+              <span class="text3" >평점 : {{ review.rank }}점</span><br>
+            </div>    
+                <button class="btn btn-outline-warning" @click="isReviewUpdate=true">수정</button>
+                <button class="btn btn-outline-warning" @click="deleteReview(review)">삭제</button>
+                <div v-if="isReviewUpdate">
+                  <input 
+                    type="text"
+                    v-model.trim="reviewContentUpdate"
+                    @keyup.enter="updateReview(review)"
+                  >
+                  <button class="btn btn-outline-info" @click="updateReview(review)">저장</button>
+                </div>
+                <button  class="btn btn-outline-info" @click="getComments(review)" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">댓글보기</button>
+                  
+              </div>
+            </div>
+        <!-- 댓글댓글 -->
+        <div class="collapse" id="collapseExample">
+          <div class="comment_card card-body second2">
+            <input 
+              type="text"
+              v-model.trim="commentContent"
+              @keyup.enter="createComment(review)"
+              class="form-control comment_addtxt"
+              placeholder="add comment"
+            >
+            <div v-for="comment in comments" :key="comment.id">
+              <span>{{ comment }}</span>
+              <button class="btn btn-outline-warning" @click="isCommentUpdate=true">수정</button>
+              <button class="btn btn-outline-warning" @click="deleteComment(review, comment)">삭제</button>
+              <div v-if="isCommentUpdate">
+              <input 
+                class="form-control commentupdate_addtxt"
+                type="text"
+                v-model.trim="commentContentUpdate"
+                @keyup.enter="updateComment(review, comment)"
+                placeholder="입력하고 enter"
+              >
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 댓글댓글 -->
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
-import Review from '@/components/Review.vue'
 
 
 export default {
   name: 'MovieDetail',
-  components: {
-    Review
-  },
   data: function () {
     return {
       SelectedMovie: null,
@@ -103,6 +111,7 @@ export default {
       comments: null,
       commentContent: null,
       commentContentUpdate: null,
+      isCommentUpdate:false,
 
       isUserMovie: false,
     }
@@ -192,6 +201,7 @@ export default {
       })
         .then(res => {
           console.log(res)
+          this.isReviewUpdate=false
           this.getReviews()
         })
         .catch(err => {
@@ -263,6 +273,7 @@ export default {
         .then(res => {
           console.log(res)
           this.getComments(review)
+          this.isCommentUpdate=false
         })
         .catch(err => {
           console.log(err)
@@ -359,16 +370,12 @@ export default {
 .spanTag {
   font-family: 'Noto Sans KR', sans-serif;
   text-align: left;
+  font-size: 15px;
 }
 
 /* 리뷰 폰트 */
 .reviewTag {
   font-family: 'Noto Sans KR', sans-serif;
-}
-
-/* 댓글 폰트 */
-.commentTag {
-  font-family: 'Sunflower', sans-serif;
 }
 
 /* 포스터 백그라운드 이미지 설정 */
@@ -445,4 +452,100 @@ export default {
 .switchToggle input:checked + label:after, .switchToggle input:checked + input + label:after {left: calc(100% - 2px); transform: translateX(-100%); }
 .switchToggle label:active:after {width: 60px; } 
 .toggle-switchArea { margin: 10px 0 10px 0; }
+
+
+
+/* 리뷰립류비류빌뷰ㅣㄹ뷰리뷸비ㅠㄹ */
+.review-body {
+    background-color: rgba(255, 255, 255, 0.493);
+    position: relative;
+    z-index: 99;
+}
+
+.addtxt {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    font-size: 13px;
+    width: 70%;
+    background-color: #dddddd;
+    font-weight: 500
+}
+
+.form-control:focus {
+  color: #000
+}
+
+.second {
+  width: 70%;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 10px 10px 5px #aaaaaa
+}
+
+.text1 {
+  font-size: 15px;
+  font-weight: 500;
+  color: #56575b;
+  font-weight: bold;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.text2 {
+  font-size: 13px;
+  font-weight: 500;
+  margin-left: 6px;
+  color: #e4007f;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+}
+
+.text3 {
+  font-size: 13px;
+  font-weight: 500;
+  margin-right: 4px;
+  margin-left: auto;
+  color: #828386
+}
+
+.collapse {
+  position: relative;
+  z-index: 99;
+}
+
+.comment_card {
+  position: relative;
+  z-index: 99;
+  width: 50%;
+  font-family: 'Sunflower', sans-serif;
+}
+
+.second2 {
+  width: 100%;
+  background-color: #f1f1f1e7;
+  border-radius: 4px;
+}
+
+.comment_addtxt {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  margin: auto;
+  font-size: 13px;
+  width: 70%;
+  background-color: #fffefeee;
+  font-weight: 500
+}
+
+.commentupdate_addtxt {
+  /* padding-top: 10px;
+  padding-bottom: 10px; */
+  text-align: center;
+  margin: auto;
+  font-size: 13px;
+  width: 50%;
+  background-color: #fffefeee;
+  font-weight: 500
+}
+
 </style>
