@@ -125,17 +125,15 @@ def user_movies(request, user_pk):
 @api_view(['POST', 'DELETE'])
 @permission_classes([AllowAny])
 def user_movies_create_or_delete(request, movie_pk):
-    # if request.method == 'GET':
-    #     my_movie = MyMovie.objects.filter(user_id=request.user.pk, movie_id=movie_pk).first()
-    #     serializer = MyMovieSerializer(my_movie)
-    #     return Response(serializer.data)
-
     if request.method == 'POST':
-        movie = get_object_or_404(Movie, pk=movie_pk)
-        serializer = MyMovieSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user, movie=movie, title=movie.title, poster_path=movie.poster_path)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if MyMovie.objects.filter(user_id=request.user.pk, movie_id=movie_pk).exists():
+            return Response({'error': '이미 저장'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            movie = get_object_or_404(Movie, pk=movie_pk)
+            serializer = MyMovieSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(user=request.user, movie=movie, title=movie.title, poster_path=movie.poster_path)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     elif request.method == 'DELETE':
         my_movie = MyMovie.objects.filter(user_id=request.user.pk, movie_id=movie_pk).first()

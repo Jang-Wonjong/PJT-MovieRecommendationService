@@ -447,8 +447,8 @@ export default {
 .switchToggle label {cursor: pointer; text-indent: -9999px; width: 70px; max-width: 70px; height: 30px; background: #212529; display: block; border-radius: 100px; position: relative; }
 .switchToggle label:after {content: ''; position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; background: #dddddd; border-radius: 90px; transition: 0.3s; }
 .switchToggle input:checked + label, .switchToggle input:checked + input + label  {background: #e4007f; }
-.switchToggle input + label:before, .switchToggle input + input + label:before {content: '☆'; position: absolute; top: 5px; left: 35px; width: 26px; height: 26px; border-radius: 90px; transition: 0.3s; text-indent: 0; color:#dddddd; }
-.switchToggle input:checked + label:before, .switchToggle input:checked + input + label:before {content: '★'; position: absolute; top: 5px; left: 10px; width: 26px; height: 26px; border-radius: 90px; transition: 0.3s; text-indent: 0; color: #dddddd; }
+.switchToggle input + label:before, .switchToggle input + input + label:before {content: ''; position: absolute; top: 5px; left: 35px; width: 26px; height: 26px; border-radius: 90px; transition: 0.3s; text-indent: 0; color:#dddddd; }
+.switchToggle input:checked + label:before, .switchToggle input:checked + input + label:before {content: ''; position: absolute; top: 5px; left: 10px; width: 26px; height: 26px; border-radius: 90px; transition: 0.3s; text-indent: 0; color: #dddddd; }
 .switchToggle input:checked + label:after, .switchToggle input:checked + input + label:after {left: calc(100% - 2px); transform: translateX(-100%); }
 .switchToggle label:active:after {width: 60px; } 
 .toggle-switchArea { margin: 10px 0 10px 0; }

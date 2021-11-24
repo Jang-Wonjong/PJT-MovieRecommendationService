@@ -54,10 +54,10 @@
         <div class="intro">
           <h2 class="text-center">Movie Collection</h2>
         </div>
-        <div class="row people d-flex justify-content-center">
+        <div class="row d-flex justify-content-center">
           <div class="col-md-4 col-lg-3 item" v-for="usermovie in userMovies" :key="usermovie.user_id">
-            <div class="box" :style="`background-image:url('https://image.tmdb.org/t/p/original${usermovie.poster_path}');`">
-              <div class="cover">
+            <div class="box people" :style="`background-image:url('https://image.tmdb.org/t/p/original${usermovie.poster_path}');`">
+              <div class="cover" @click="moveToDetail(usermovie.movie_id)">
                 <h3 class="name">{{ usermovie.title }}</h3>
               </div>
             </div>
@@ -228,6 +228,13 @@ export default {
           console.log(err)
         })
     },
+    moveToDetail: function (movieId) {
+      console.log(movieId)
+      this.$router.push({
+        name: 'MovieDetail',
+        query: { movieId }  
+      })
+    }
   },
   computed: {
     ...mapGetters([
