@@ -1,5 +1,5 @@
 <template>
-  <div class="justify-content-center mt-5 border-left border-right body">
+  <div class="justify-content-center mt-5 border-left border-right review-body">
     <div class="d-flex justify-content-center pt-3 pb-2"> <input type="text" name="text" placeholder="+ Add a note" class="form-control addtxt"></div>
       <div class="d-flex justify-content-center py-2">
         <div class="second py-2 px-2"> <span class="text1">Type your note, and hit enter to add it</span>
@@ -22,19 +22,11 @@ export default {
 </script>
 
 <style scoped>
-/* 리뷰리뷰리뷰리뷰리뷰리뷰리뷰리뷰 */
-.body {
+.review-body {
     background-color: rgba(255, 255, 255, 0.493);
     position: relative;
     z-index: 99;
 }
-
-/* .review_container {
-    background-color: #eef2f5;
-    width: 400px;
-    position: relative;
-    z-index: 99;
-} */
 
 .addtxt {
     padding-top: 10px;
