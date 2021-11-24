@@ -1,9 +1,5 @@
 <template>
   <div>
-    <!-- background -->
-    <!-- <div class="movie-detail-image">
-      <img src="https://thumbs.gfycat.com/AdoredWindingIberianbarbel.webp" alt="">
-    </div> -->
 
     <div class="m-4 p-3 d-flex justify-content-center" v-if="userProfile">
       <div class="card-profile p-4">
@@ -17,10 +13,7 @@
             >
             <button @click="updateProfile(userProfile)">SAVE</button>
           </div>
-          <!-- <span class="idd">@eleanorpena</span>
-          <div class="d-flex flex-row justify-content-center align-items-center gap-2"> 
-            <span class="idd1">Oxc4c16a645_b21a</span> <span><i class="fa fa-copy"></i></span> 
-          </div> -->
+      
           <div class="d-flex flex-row justify-content-center align-items-center mt-3"> 
             <span class="number mx-3">{{ followersCounting }} <span class="follow">Followers</span></span>
             <span class="number mx-3">{{ followingsCounting }} <span class="follow">Followings</span></span> 
@@ -28,11 +21,9 @@
           <div class=" d-flex mt-2" v-if="!isSelf"> 
             <button class="btn-profile1 btn-dark" @click="follow">Follow</button> 
           </div>
-          <!-- <div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center"> 
-            <span><i class="fa fa-twitter"></i></span> <span><i class="fa fa-facebook-f"></i></span> <span><i class="fa fa-instagram"></i></span> <span><i class="fa fa-linkedin"></i></span>
-          </div> -->
         </div>
       </div>
+
       <div v-if="isSelf">
         <button 
           class="btn btn-primary btn-circle btn-circle-sm m-1"
@@ -108,9 +99,7 @@ export default {
       })
         .then(res => {
           console.log(res)
-          if (this.$store.state.id === this.youId) {
-            this.isSelf = true
-          }
+          
           this.userProfile = res.data
           this.getFollowers()
           this.getFollowings()
@@ -133,9 +122,6 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    },
-    updateInputOn: function () {
-
     },
     updateProfile: function (userProfile) {
       // console.log(userProfile)
@@ -244,6 +230,9 @@ export default {
   created: function () {
     if (localStorage.getItem('jwt')) {
       this.youId = this.$route.query.userId
+      if (this.$store.state.id == this.youId) {
+      this.isSelf = true
+      }
       this.getProfile()
 
     } else {

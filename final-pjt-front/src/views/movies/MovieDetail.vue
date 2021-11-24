@@ -6,13 +6,14 @@
     >
     </div>
     <div class="movie-content d-flex">
-      <img class="mt-2" :src="imgSrc" alt="" style="height: 80vh;">
-      <div class="ml-4 w-75">
-        <h1 class="h1Tag">{{ SelectedMovie.title }}</h1><br>
+      <img :src="imgSrc" alt="" style="height: 80vh;">
+      <div class="movie-info ml-4 w-75">
+        <h1 class="h1Tag">{{ SelectedMovie.title }}</h1>
         <div class="movie-information mt-3">
-          <p class="spanTag mt-3">{{ SelectedMovie.original_title }}</p><br>
+          <p class="spanTag1 mt-3">{{ SelectedMovie.original_title }}</p><br>
           <p class="spanTag mt-3">{{ SelectedMovie.overview }}</p><br>
-          <p class="spanTag mt-3">개봉일 : {{ SelectedMovie.release_date }}</p><br>
+          <p class="spanTag mt-3">개봉일 : {{ SelectedMovie.release_date }}</p>
+          <p class="spanTag mt-3">평점 : {{ SelectedMovie.vote_average }}</p><br>
         </div>
       </div>
       <!-- My movie -->
@@ -40,24 +41,24 @@
             <span class="text1">{{ review.content }}</span>
             <div class="d-flex justify-content-between py-1 pt-2">
               <span class="text2" @click="moveToProfile(review.user_id)">user : {{ review.user_id }}</span><br>
-            <div>
-            <div class="d-flex"> 
-              <span class="text3" >평점 : {{ review.rank }}점</span><br>
-            </div>    
-                <button class="btn btn-outline-warning" @click="isReviewUpdate=true">수정</button>
-                <button class="btn btn-outline-warning" @click="deleteReview(review)">삭제</button>
-                <div v-if="isReviewUpdate">
+              <div class="d-flex"> 
+                <span class="text3" >평점 : {{ review.rank }}점</span><br>
+              </div>
+            </div>
+                <div>
+                <button class="btn btn-outline-warning m-1" @click="review.isReviewUpdate=true"><i class="fas fa-eraser"></i></button>
+                <button class="btn btn-outline-warning m-1" @click="deleteReview(review)"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn btn-outline-info m-1" @click="getComments(review)" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><i class="far fa-comment-dots"></i></button>
+                <div v-if="review.isReviewUpdate">
                   <input 
                     type="text"
                     v-model.trim="reviewContentUpdate"
                     @keyup.enter="updateReview(review)"
+                    class="form-control reviewupdate_addtxt"
+                    placeholder="입력하고 enter"
                   >
-                  <button class="btn btn-outline-info" @click="updateReview(review)">저장</button>
                 </div>
-                <button  class="btn btn-outline-info" @click="getComments(review)" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">댓글보기</button>
-                  
-              </div>
-            </div>
+                </div> 
         <!-- 댓글댓글 -->
         <div class="collapse" id="collapseExample">
           <div class="comment_card card-body second2">
@@ -69,10 +70,10 @@
               placeholder="add comment"
             >
             <div v-for="comment in comments" :key="comment.id">
-              <span>{{ comment }}</span>
-              <button class="btn btn-outline-warning" @click="isCommentUpdate=true">수정</button>
-              <button class="btn btn-outline-warning" @click="deleteComment(review, comment)">삭제</button>
-              <div v-if="isCommentUpdate">
+              <span>user {{ comment.id }} : {{ comment.content }}</span>
+              <button class="btn btn-outline-warning m-1" @click="comment.isCommentUpdate=true"><i class="fas fa-eraser"></i></button>
+              <button class="btn btn-outline-warning m-1" @click="deleteComment(review, comment)"><i class="fas fa-trash-alt"></i></button>
+              <div v-if="comment.isCommentUpdate">
               <input 
                 class="form-control commentupdate_addtxt"
                 type="text"
@@ -146,7 +147,12 @@ export default {
       })
         .then(res => {
           console.log(res)
-          this.reviews = res.data
+          this.reviews = res.data.map(review => {
+            return {
+              ...review,
+              isReviewUpdate: false
+            }
+          })
         })
         .catch(err => {
           console.log(err)
@@ -218,7 +224,12 @@ export default {
       })
         .then(res => {
           // console.log(res)
-          this.comments = res.data
+          this.comments = res.data.map(comment => {
+            return {
+              ...comment,
+              isCommentUpdate: false
+            }
+          })
         })
         .catch(err => {
           console.log(err)
@@ -354,8 +365,23 @@ export default {
   position: relative;
   border: white;
   z-index: 999;
+  /* background-color: black; */
+  /* opacity: 0.3; */
 }
-  
+
+.movie-info {
+  /* position: fixed; */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 100%;
+  background-color: rgb(40, 40, 40);
+  opacity: 0.6;
+  content: "";
+  display: block;
+}
+
 .is-completed {
   text-decoration: line-through;
   color: rgb(112, 112, 112);
@@ -373,9 +399,10 @@ export default {
   font-size: 15px;
 }
 
-/* 리뷰 폰트 */
-.reviewTag {
+.spanTag1 {
   font-family: 'Noto Sans KR', sans-serif;
+  text-align: left;
+  font-size: 30px;
 }
 
 /* 포스터 백그라운드 이미지 설정 */
@@ -407,9 +434,10 @@ export default {
 /* 영화 디테일 구역 */
 .movie-information {
   max-width: 80%;
-  font-size: 14px;
-  color: #dddddddd;
+  font-size: 18px;
+  color: #fff;
   margin: auto;
+  /* z-index: 999; */
 }
 
 
@@ -429,8 +457,8 @@ export default {
 /* 댓글 구역 */
 .community-reviewTag {
   position: relative;
-    z-index: 99;
-    color: #fff;
+  z-index: 99;
+  color: #fff;
 }
 
 
@@ -455,21 +483,22 @@ export default {
 
 
 
-/* 리뷰립류비류빌뷰ㅣㄹ뷰리뷸비ㅠㄹ */
+/* 리뷰 */
 .review-body {
-    background-color: rgba(255, 255, 255, 0.493);
-    position: relative;
-    z-index: 99;
+  background-color: rgba(255, 255, 255, 0.493);
+  position: relative;
+  z-index: 99;
 }
 
 .addtxt {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: center;
-    font-size: 13px;
-    width: 70%;
-    background-color: #dddddd;
-    font-weight: 500
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  font-size: 13px;
+  width: 70%;
+  background-color: #dddddd;
+  font-weight: 500;
+  font-family: 'Sunflower', sans-serif;
 }
 
 .form-control:focus {
@@ -488,7 +517,7 @@ export default {
   font-weight: 500;
   color: #56575b;
   font-weight: bold;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: 'Sunflower', sans-serif;
 }
 
 .text2 {
@@ -496,7 +525,7 @@ export default {
   font-weight: 500;
   margin-left: 6px;
   color: #e4007f;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: 'Sunflower', sans-serif;
   cursor: pointer;
 }
 
@@ -505,7 +534,8 @@ export default {
   font-weight: 500;
   margin-right: 4px;
   margin-left: auto;
-  color: #828386
+  color: #828386;
+  font-family: 'Sunflower', sans-serif;
 }
 
 .collapse {
@@ -513,6 +543,19 @@ export default {
   z-index: 99;
 }
 
+.reviewupdate_addtxt {
+  /* padding-top: 10px;
+  padding-bottom: 10px; */
+  text-align: center;
+  margin: auto;
+  font-size: 13px;
+  width: 50%;
+  background-color: #fffefeee;
+  font-weight: 500
+}
+
+
+/* 댓글 */
 .comment_card {
   position: relative;
   z-index: 99;

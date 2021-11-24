@@ -1,17 +1,19 @@
 <template>
   <div>
     <section class="wrapper">
-      <div class="container">
+      <!-- <div class="container"> -->
         <div class="row">
-          <div class="col-md-3 d-flex" v-for="movie in movies" :key="movie.id">
+          <div class="col-md-3 d-flex mt-4 mx-auto" v-for="movie in movies" :key="movie.id">
             <div class="card text-white card-has-bg click-col" :style="`background-image:url('https://image.tmdb.org/t/p/w400${movie.poster_path}');`">
               <img class="card-img d-none" :src="`https://image.tmdb.org/t/p/w400${movie.poster_path}`" alt="movie_poster">
               <div class="card-img-overlay d-flex flex-column movie-font" @click="moveToDetail(movie.id)">
                 <div class="card-body">
-                  <small class="card-meta mb-2">{{ movie.original_title }}</small>
+                  <div class="original-title-tag">
+                  <span class="card-meta mb-2">{{ movie.original_title }}</span>
+                  </div>
                 </div>
-                <div class="card-footer">
-                  <h4 class="card-title mt-0 fs-6">{{ movie.title }}</h4>
+                <!-- <div class="card-footer">
+                  <h4 class="card-title mt-0 fs-4">{{ movie.title }}</h4> -->
                   <!-- <small><i class="far fa-clock"></i>{{ movie.release_date }}</small> -->
                   <!-- <div class="media">
                     <img class="mr-3 rounded-circle" src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/male-512.png" alt="Generic placeholder image" style="max-width:50px">
@@ -20,12 +22,12 @@
                       <small>Director of UI/UX</small>
                     </div>
                   </div> -->
-                </div>
+                <!-- </div> -->
               </div>
             </div>
           </div>
         </div>
-      </div>
+      <!-- </div> -->
     </section>
   </div>
 </template>
@@ -152,7 +154,7 @@ body {
 .card.card-has-bg:hover .card-img-overlay {
   transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
   background: #234f6d;
-  background: linear-gradient(0deg, #d6338475 100%, #d63384 0%);
+  background: linear-gradient(0deg, #faf8f975 100%, #444344 0%);
 }
 .card .card-footer {
   background: none;
@@ -163,6 +165,9 @@ body {
 }
 .card .card-meta {
   color: orange;
+  font-size: 17px;
+  /* background-color:rgba(0, 0, 0, 0.3);
+  opacity: 0.5; */
 }
 .card .card-body {
   transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
@@ -181,5 +186,18 @@ body {
   background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, #77777780 100%);
 }
 
-/*# sourceMappingURL=card.css.map */
+.card-title {
+  background-color: black;
+  opacity: 0.7;
+  color: white;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.original-title-tag{
+  background-color: black;
+  opacity: 0.6;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
 </style>

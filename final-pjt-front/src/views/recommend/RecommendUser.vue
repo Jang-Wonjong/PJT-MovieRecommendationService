@@ -1,76 +1,27 @@
 <template>
-<div>
-  <div class="container py-5">
-    <div class="row text-center text-white">
-      <div class="col-lg-8 mx-auto">
-        <h1 class="display-4">Let's Movie and Chill</h1>
-          <p class="lead mb-0">Using Bootstrap 4 grid and utilities, create a nice team page.</p>
-          <p class="lead">Snippet by<a href="https://bootstrapious.com/snippets" class="text-white">
-            <u>Bootstrapious</u></a>
-          </p>
+  <div>
+    <div class="container py-5">
+      <div class="row text-center text-white">
+        <div class="col-lg-8 mx-auto">
+          <h1 class="display-4 h1Tag">Let's Movie and Chill</h1>
+            <p class="lead mb-0 text1">나와 취향이 비슷한 친구의 컬렉션에서 영화를 추천 받으세요!</p>
+            <span>{{recomUsers}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-xl-3 col-sm-6 mb-5" v-for="recomUser in recomUsers" :key="recomUser.id">
+          <div class="bg rounded shadow-sm py-5 px-4">
+            <img src="https://bootstrapious.com/i/snippets/sn-team/teacher-4.jpg" alt="" width="100" class="img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
+            <h5 class="mb-0 h1Tag">{{ recomUser.nickname }}</h5>
+            <span class="text-muted">{{ recomUser.same_cnt }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="container">
-    <div class="row text-center">
-        <!-- Team item -->
-        <div class="col-xl-3 col-sm-6 mb-5">
-            <div class="bg-white rounded shadow-sm py-5 px-4"><img src="https://bootstrapious.com/i/snippets/sn-team/teacher-4.jpg" alt="" width="100" class="img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
-                <h5 class="mb-0">Manuella Nevoresky</h5><span class="small text-uppercase text-muted">CEO - Founder</span>
-                <ul class="social mb-0 list-inline mt-3">
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-facebook-f"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-twitter"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-instagram"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-linkedin"></i></a></li>
-                </ul>
-            </div>
-        </div><!-- End -->
-
-        <!-- Team item -->
-        <div class="col-xl-3 col-sm-6 mb-5">
-            <div class="bg-white rounded shadow-sm py-5 px-4"><img src="https://bootstrapious.com/i/snippets/sn-team/teacher-2.jpg" alt="" width="100" class="img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
-                <h5 class="mb-0">Samuel Hardy</h5><span class="small text-uppercase text-muted">CEO - Founder</span>
-                <ul class="social mb-0 list-inline mt-3">
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-facebook-f"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-twitter"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-instagram"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-linkedin"></i></a></li>
-                </ul>
-            </div>
-        </div><!-- End -->
-
-        <!-- Team item -->
-        <div class="col-xl-3 col-sm-6 mb-5">
-            <div class="bg-white rounded shadow-sm py-5 px-4"><img src="https://bootstrapious.com/i/snippets/sn-team/teacher-1.jpg" alt="" width="100" class="img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
-                <h5 class="mb-0">Tom Sunderland</h5><span class="small text-uppercase text-muted">CEO - Founder</span>
-                <ul class="social mb-0 list-inline mt-3">
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-facebook-f"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-twitter"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-instagram"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-linkedin"></i></a></li>
-                </ul>
-            </div>
-        </div><!-- End -->
-
-        <!-- Team item -->
-        <div class="col-xl-3 col-sm-6 mb-5">
-            <div class="bg-white rounded shadow-sm py-5 px-4"><img src="https://bootstrapious.com/i/snippets/sn-team/teacher-7.jpg" alt="" width="100" class="img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
-                <h5 class="mb-0">John Tarly</h5><span class="small text-uppercase text-muted">CEO - Founder</span>
-                <ul class="social mb-0 list-inline mt-3">
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-facebook-f"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-twitter"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-instagram"></i></a></li>
-                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-linkedin"></i></a></li>
-                </ul>
-            </div>
-        </div><!-- End -->
-    </div>
-  </div>
-    <!-- <div v-for="recomUser in recomUsers" :key="recomUser[1]">
-      <p @click="moveToProfile(recomUser[1])">{{ recomUser }}</p>
-    </div> -->
-</div>
 </template>
 
 <script>
@@ -83,6 +34,12 @@ export default {
   data: function () {
     return {
       recomUsers: null,
+      slides: [
+        {
+          title: 'Slide #1',
+          content: 'Slide content.'
+        }
+      ],
     }
   },
   methods: {
@@ -123,29 +80,26 @@ export default {
 </script>
 
 <style scoped>
-body {
-    background: #e8cbc0;
-    background: -webkit-linear-gradient(to right, #e8cbc0, #636fa4);
-    background: linear-gradient(to right, #e8cbc0, #636fa4);
-    min-height: 100vh;
+.bg {
+  background-color: black;
+  opacity: 0.7;
 }
 
-.social-link {
-    width: 30px;
-    height: 30px;
-    border: 1px solid #ddd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-    border-radius: 50%;
-    transition: all 0.3s;
-    font-size: 0.9rem;
+.bg-t {
+  background-color: black;
+  opacity: 0.7;
 }
 
-.social-link:hover, .social-link:focus {
-    background: #ddd;
-    text-decoration: none;
-    color: #555;
+.h1Tag {
+  color: white;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.text1 {
+  font-size: 15px;
+  font-weight: 500;
+  color: #dddddd;
+  font-weight: bold;
+  font-family: 'Sunflower', sans-serif;
 }
 </style>

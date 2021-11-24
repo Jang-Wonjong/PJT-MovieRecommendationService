@@ -150,16 +150,16 @@ def recommend_user(request):
     me = request.user
     user = get_user_model().objects.get(pk=me.pk)
     followings = user.followings.all().order_by('id')
-    following_list = []                         # 내가 팔로우 하고 있는 사람들을 리스트에 담음
+    following_list = []    # 내가 팔로우 하고 있는 사람들을 리스트에 담음
     for following in followings:
         following_list.append(following.id)
     
-    my_movies = MyMovie.objects.filter(user_id=me).order_by('-pk')
+    my_movies = MyMovie.objects.filter(user_id=me).order_by('-pk')  # 내 영화 컬렉션
     my_movie_list = []
     for my_movie in my_movies:
         my_movie_list.append(my_movie.movie_id)
 
-    all_movies = MyMovie.objects.all()
+    all_movies = MyMovie.objects.all()  # 전체 영화 컬렉션
     user_movies = []
     count_data = []
     
@@ -170,14 +170,18 @@ def recommend_user(request):
                 count_data.append(all_movie.user_id)
 
     data = []
-    for i in range(len(count_data)):
-        data.append((user_movies.count(count_data[i]), count_data[i]))  # 개수, 유저ID
+    for i in range(len(count_data)):    # 개수, 유저ID
+        same_cnt = user_movies.count(count_data[i])
+        user_id = count_data[i]
+        user = get_user_model().objects.get(pk=user_id)
+        box = {}
+        box['id'] = user.id
+        box['nickname'] = user.nickname
+        box['same_cnt'] = same_cnt
+
+        data.append(box)
+
     
-    data.sort(reverse=True)
-    
-    # # paginator = Paginator(photo_tickets, 12)
-    # # page_num = request.GET.get('page_num')
-    # # photo_tickets = paginator.get_page(page_num)
-    # serializer = MyMovieSerializer(user_movies, many=True)
-    # serializer.data.append({'possible_page': paginator.num_pages})
+    # data.sort(reverse=True)
+
     return Response(data)
