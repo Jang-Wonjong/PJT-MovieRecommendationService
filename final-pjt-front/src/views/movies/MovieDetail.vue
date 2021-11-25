@@ -15,65 +15,75 @@
           <p class="spanTag mt-3">개봉일 : {{ SelectedMovie.release_date }}</p>
           <p class="spanTag mt-3">평점 : {{ SelectedMovie.vote_average }}</p><br>
         </div>
-      </div>
-      <!-- My movie -->
-      <div class="outerDivFull" >
-        <div class="switchToggle">
-            <input type="checkbox" 
-              id="switch"
-              v-model="isUserMovie"
-              @click="userMovie"
-            >
-            <label for="switch"></label>
+        <!-- My movie -->
+        <div class="outerDivFull">
+          <div class="switchToggle">
+              <input type="checkbox" 
+                id="switch"
+                v-model="isUserMovie"
+                @click="userMovie"
+              >
+              <label for="switch"></label>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 리뷰 -->
+    <!-- review -->
     <div class="justify-content-center mt-5 border-left border-right review-body">
-      <div class="d-flex justify-content-center pt-3 pb-2">
-        <input type="text" name="text" placeholder="add review" class="form-control addtxt"
-        v-model.trim="reviewContent"
-        @keyup.enter="createReview">
+      <!-- review input -->
+      <div class="px-5">
+        <div class="d-flex justify-content-center pt-3 pb-5">
+          <b-form-rating id="rating-inline" variant="warning" inline value="3" class="rating-stars" v-model="rank"></b-form-rating>
+          <input type="text" name="text" placeholder="add review" class="form-control addtxt"
+          v-model.trim="reviewContent"
+          @keyup.enter="createReview">
+        </div>
       </div>
-        <div class="d-flex justify-content-center py-2" v-for="review in reviews" :key="review.id">
-          <div class="second py-2 px-2" >
-            <span class="text1">{{ review.content }}</span>
-            <div class="d-flex justify-content-between py-1 pt-2">
-              <span class="text2" @click="moveToProfile(review.user_id)">user : {{ review.user_id }}</span><br>
-              <div class="d-flex"> 
-                <span class="text3" >평점 : {{ review.rank }}점</span><br>
-              </div>
+      <div class="d-flex justify-content-center py-2" v-for="review in reviews" :key="review.id">
+        <div class="second py-2 px-2" >
+          <span class="text1">{{ review.content }}</span>
+          <div class="d-flex justify-content-between py-1 pt-2">
+            <span class="text2" @click="moveToProfile(review.user_id)">{{ review.nickname }}</span><br>
+            <div class="d-flex"> 
+              <span class="text3" >평점 : {{ review.rank }}점</span><br>
             </div>
-                <div>
-                <button class="btn btn-outline-warning m-1" @click="review.isReviewUpdate=true"><i class="fas fa-eraser"></i></button>
-                <button class="btn btn-outline-warning m-1" @click="deleteReview(review)"><i class="fas fa-trash-alt"></i></button>
-                <button class="btn btn-outline-info m-1" @click="getComments(review)" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><i class="far fa-comment-dots"></i></button>
-                <div v-if="review.isReviewUpdate">
-                  <input 
-                    type="text"
-                    v-model.trim="reviewContentUpdate"
-                    @keyup.enter="updateReview(review)"
-                    class="form-control reviewupdate_addtxt"
-                    placeholder="입력하고 enter"
-                  >
-                </div>
-                </div> 
+          </div>
+          <div>
+            <div>
+              <button class="btn btn-outline-warning m-1" @click="review.isReviewUpdate=true"><i class="fas fa-eraser"></i></button>
+              <button class="btn btn-outline-warning m-1" @click="deleteReview(review)"><i class="fas fa-trash-alt"></i></button>
+              <button class="btn btn-outline-info m-1" @click="getComments(review)" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><i class="far fa-comment-dots"></i></button>
+            </div>
+            <span class="text3" >작성날짜 : {{ review.created_at }}</span><br>
+            <span class="text3" >수정날짜 : {{ review.updated_at }}</span>
+        
+            <div v-if="review.isReviewUpdate">  <!-- 리뷰 수정 -->
+              <input 
+                type="text"
+                v-model.trim="reviewContentUpdate"
+                @keyup.enter="updateReview(review)"
+                class="form-control reviewupdate_addtxt"
+                placeholder="입력하고 enter"
+              >
+            </div>
+          </div> 
         <!-- 댓글댓글 -->
-        <div class="collapse" id="collapseExample">
+        <div class="collapse" id="collapseExample" v-if="review.isCommentOpen">
           <div class="comment_card card-body second2">
             <input 
               type="text"
-              v-model.trim="commentContent"
+              v-model.trim="review.commentContent"
               @keyup.enter="createComment(review)"
               class="form-control comment_addtxt"
               placeholder="add comment"
             >
             <div v-for="comment in comments" :key="comment.id">
-              <span>user {{ comment.id }} : {{ comment.content }}</span>
+              <span @click="moveToProfile(comment.user_id)">{{ comment.nickname }}</span>
+              <span> : {{ comment.content }}</span>
               <button class="btn btn-outline-warning m-1" @click="comment.isCommentUpdate=true"><i class="fas fa-eraser"></i></button>
               <button class="btn btn-outline-warning m-1" @click="deleteComment(review, comment)"><i class="fas fa-trash-alt"></i></button>
-              <div v-if="comment.isCommentUpdate">
+              <div >
               <input 
                 class="form-control commentupdate_addtxt"
                 type="text"
@@ -86,10 +96,10 @@
           </div>
         </div>
         <!-- 댓글댓글 -->
-        </div>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -104,25 +114,25 @@ export default {
       SelectedMovie: null,
       SelectedMovieId: null,  // MovieList에서 query로 넘겨준 movie id 받는 변수
 
-      reviews: null,
+      reviews: null,  // 리뷰
       reviewContent: null,
       reviewContentUpdate: null,
-      isReviewUpdate: false,
+      
+      rank: null, // 평점
 
       comments: null,
       commentContent: null,
       commentContentUpdate: null,
-      isCommentUpdate:false,
 
       isUserMovie: false,
     }
   },
   methods: {
-     // 포스터 배경 백드롭 이미지 불러오는 함수
-    image(img) {
+    image(img) {  // 포스터 배경 백드롭 이미지 불러오는 함수
       console.log();
       return `https://image.tmdb.org/t/p/original/${img}`;
     },
+
     // movie
     getMovie: function () {
       axios({
@@ -138,6 +148,7 @@ export default {
           console.log(err)
         })
     },
+
     // review
     getReviews: function () {
       axios({
@@ -146,11 +157,13 @@ export default {
         headers: this.config
       })
         .then(res => {
-          console.log(res)
+          // console.log(res)
           this.reviews = res.data.map(review => {
             return {
               ...review,
-              isReviewUpdate: false
+              isReviewUpdate: false,
+              isCommentOpen: false,
+              commentContent: null,
             }
           })
         })
@@ -160,8 +173,9 @@ export default {
     },
     createReview: function () {
       const reviewItem = {
+        nickname: this.$store.state.nickname,
         content: this.reviewContent,
-        rank: 5,
+        rank: this.rank,
       }
       axios({
         method: 'post',
@@ -170,7 +184,7 @@ export default {
         headers: this.config
       })
         .then(res => {
-          console.log(res)
+          // console.log(res)
           this.reviews += res.data
           this.getReviews()
         })
@@ -186,8 +200,8 @@ export default {
         url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/review/${review.id}/`,
         headers: this.config
       })
-        .then(res => {
-          console.log(res)
+        .then(() => {
+          // console.log(res)
           this.getReviews()
         })
         .catch(err => {
@@ -205,9 +219,9 @@ export default {
         data: reviewItem,
         headers: this.config
       })
-        .then(res => {
-          console.log(res)
-          this.isReviewUpdate=false
+        .then(() => {
+          // console.log(res)
+          // this.isReviewUpdate=false
           this.getReviews()
         })
         .catch(err => {
@@ -215,6 +229,7 @@ export default {
         })
       this.reviewContentUpdate = null
     },
+
     // comment
     getComments: function (review) {
       axios({
@@ -227,9 +242,11 @@ export default {
           this.comments = res.data.map(comment => {
             return {
               ...comment,
-              isCommentUpdate: false
+              isCommentUpdate: false,
+              commentContent: null
             }
           })
+          // this.getReviews()
         })
         .catch(err => {
           console.log(err)
@@ -237,7 +254,8 @@ export default {
     },
     createComment: function (review) {
       const commentItem = {
-        content: this.commentContent,
+        nickname: this.$store.state.nickname,
+        content: review.commentContent,
       }
       // console.log(review.id)
       axios({
@@ -254,7 +272,7 @@ export default {
         .catch(err => {
           console.log(err)
         })
-      this.commentContent = null
+      review.commentContent = null
     },
     deleteComment: function (review, comment) {
       axios({
@@ -262,8 +280,8 @@ export default {
         url: `http://127.0.0.1:8000/movie/review/${review.id}/comment/${comment.id}/`,
         headers: this.config
       })
-        .then(res => {
-          console.log(res)
+        .then(() => {
+          // console.log(res)
           this.getComments(review)
         })
         .catch(err => {
@@ -281,8 +299,8 @@ export default {
         data: commentItem,
         headers: this.config
       })
-        .then(res => {
-          console.log(res)
+        .then(() => {
+          // console.log(res)
           this.getComments(review)
           this.isCommentUpdate=false
         })
@@ -291,6 +309,8 @@ export default {
         })
       this.commentContentUpdate = null
     },
+
+    // ============================== 내 영화 저장 ==============================
     userMovie: function () {
       if (this.isUserMovie) {
         this.userMovieRemove()
@@ -304,8 +324,8 @@ export default {
         url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/user-movies/`,
         headers: this.config
       })
-        .then(res => {
-          console.log(res)
+        .then(() => {
+          // console.log(res)
           this.isUserMovie = true
           // this.getMovie()
         })
@@ -319,8 +339,8 @@ export default {
         url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/user-movies/`,
         headers: this.config
       })
-        .then(res => {
-          console.log(res)
+        .then(() => {
+          // console.log(res)
           this.isUserMovie = false
           // this.getMovie()
         })
@@ -328,6 +348,8 @@ export default {
           console.log(err)
         })
     },
+    // ======================================================================
+
     moveToProfile: function (userId) {
       this.$router.push({
         name: 'UserProfile',
@@ -472,8 +494,8 @@ export default {
   height: 0; width: 0; visibility: hidden; position: absolute; 
 }
 
-.switchToggle label {cursor: pointer; text-indent: -9999px; width: 70px; max-width: 70px; height: 30px; background: #212529; display: block; border-radius: 100px; position: relative; }
-.switchToggle label:after {content: ''; position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; background: #dddddd; border-radius: 90px; transition: 0.3s; }
+.switchToggle label {cursor: pointer; text-indent: -9999px; width: 70px; max-width: 70px; height: 30px; background: #dddddd; display: block; border-radius: 100px; position: relative; }
+.switchToggle label:after {content: ''; position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; background: black; border-radius: 90px; transition: 0.3s; }
 .switchToggle input:checked + label, .switchToggle input:checked + input + label  {background: #e4007f; }
 .switchToggle input + label:before, .switchToggle input + input + label:before {content: ''; position: absolute; top: 5px; left: 35px; width: 26px; height: 26px; border-radius: 90px; transition: 0.3s; text-indent: 0; color:#dddddd; }
 .switchToggle input:checked + label:before, .switchToggle input:checked + input + label:before {content: ''; position: absolute; top: 5px; left: 10px; width: 26px; height: 26px; border-radius: 90px; transition: 0.3s; text-indent: 0; color: #dddddd; }
@@ -495,7 +517,7 @@ export default {
   padding-bottom: 10px;
   text-align: center;
   font-size: 13px;
-  width: 70%;
+  width: 100%;
   background-color: #dddddd;
   font-weight: 500;
   font-family: 'Sunflower', sans-serif;
@@ -591,4 +613,7 @@ export default {
   font-weight: 500
 }
 
+.rating-stars {
+  cursor: pointer;
+}
 </style>

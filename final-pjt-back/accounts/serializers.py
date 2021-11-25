@@ -8,13 +8,14 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'username', 'password', 'nickname', )   # followings 넣으면 가입 안됨
+        fields = ('id', 'username', 'password', 'nickname', 'image')   # followings 넣으면 가입 안됨
         # fields = '__all__'
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-
+    image = serializers.ImageField(use_url=True)
+    
     class Meta:
         model = get_user_model()
-        fields = ('nickname',)
+        fields = ('nickname', 'image')
         # fields = '__all__'

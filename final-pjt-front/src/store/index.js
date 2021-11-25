@@ -61,8 +61,8 @@ export default new Vuex.Store({
         data: credentials,
       })
         .then((res) => {
-          console.log(credentials.username)
-          console.log(res)
+          // console.log(credentials.username)
+          // console.log(res)
           commit("SET_TOKEN", res.data.token)
           this.dispatch("loginInfo", credentials.username)
           router.push({ name: "MovieList" })
@@ -78,7 +78,7 @@ export default new Vuex.Store({
         headers: getters.config,
       })
       .then((res) => {
-        console.log(res)
+        // console.log(res)
         const id = res.data.id
         const username = res.data.username
         const nickname = res.data.nickname

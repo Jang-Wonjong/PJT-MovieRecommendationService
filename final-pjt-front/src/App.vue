@@ -8,12 +8,15 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <span v-if="this.$store.state.isLogin">
-              <router-link class="nav-link active d-flex" :to="{ name: 'RecommendUser' }">RecommendUser</router-link>
-              <!-- <router-link class="nav-link active" :to="{ name: 'MovieList' }">MovieList</router-link> -->
-            </span>
+        <div class="collapse navbar-collapse w-100" id="navbarNavAltMarkup">
+          <div class="navbar-nav" v-if="this.$store.state.isLogin">
+            <router-link class="nav-link active mx-2" :to="{ name: 'RecommendUser' }">RecommendUser</router-link>
+          </div>
+          <div class="navbar-nav" v-if="this.$store.state.isLogin" @click="moveToProfile(meId)">
+            <img src="https://occ-0-395-325.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABTzQndLIMejbjN7Yj6nzQHf0AffS5Whagu7Q4pYGeKpPxuO2brcmZvB729F3MQpEw6V4T1_vDzftgFBGpHFh18J9BEng.png?r=f79" alt=""
+              width="50"
+              class="p-2 cursor profile"
+            >
           </div>
         </div>
       </div>
@@ -25,6 +28,11 @@
 <script>
 export default {
   name: 'App',
+  data: function () {
+    return {
+      meId: this.$store.state.id
+    }
+  },
   methods: {
     MoveTo: function () { // 그 페이지에서 누르면 에러
       if (this.$store.state.isLogin) {
@@ -36,6 +44,13 @@ export default {
           name: 'Main'
         })
       }
+    },
+    moveToProfile: function (userId) {
+      // console.log(userId)
+      this.$router.push({
+        name: 'UserProfile',
+        query: { userId }  
+      })
     }
   }
 }
@@ -43,32 +58,10 @@ export default {
 
 <style scoped>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: black;
-  
-}
-
-.nav {
-  text-align: center;
-  padding: 10px;
-  position: relative;
-  z-index: 99;
-  background-color: black;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #6f42c1;
-  
-}
-
-#nav a.router-link-exact-active {
-  color: #d63384;
-  
-
 }
 
 #logo {
@@ -87,4 +80,8 @@ export default {
 .cursor {
   cursor: pointer;
 }
+
+/* .profile {
+  
+} */
 </style>

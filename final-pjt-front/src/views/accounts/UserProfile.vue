@@ -10,8 +10,10 @@
             <input type="text"
               v-model.trim="nicknameUpdate"
               @keyup.enter="updateProfile(userProfile)"
+              class="form-control nicknameupdate_addtxt"
+              placeholder="입력하고 enter"
             >
-            <button @click="updateProfile(userProfile)">SAVE</button>
+            <!-- <button @click="updateProfile(userProfile)">SAVE</button> -->
           </div>
       
           <div class="d-flex flex-row justify-content-center align-items-center mt-3"> 
@@ -35,9 +37,6 @@
         <button class="btn btn-danger btn-circle btn-circle-sm m-1" @click="deleteProfile"><i class="fa fa-user-alt-slash"></i></button>
       </div>
     </div>
-    
-
-    <hr>
 
     <!-- movies -->
     <div class="team-grid">
@@ -98,7 +97,7 @@ export default {
         headers: this.config
       })
         .then(res => {
-          console.log(res)
+          // console.log(res)
           
           this.userProfile = res.data
           this.getFollowers()
@@ -168,8 +167,8 @@ export default {
         url: `http://127.0.0.1:8000/accounts/follow/${this.youId}/`,
         headers: this.config
       })
-        .then(res => {
-          console.log(res)
+        .then(() => {
+          // console.log(res)
           // this.userMovies = res.data
           this.getProfile()
         })
@@ -184,15 +183,9 @@ export default {
         headers: this.config
       })
         .then(res => {
-          console.log(res)
+          // console.log(res)
           this.followers = res.data
           this.followersCounting = res.data.length
-          // for (let i in this.followers) {
-          //   if (i === this.$store.state.id) {
-          //     this.isFollow = true
-          //   }
-          // }
-          // this.getProfile()
         })
         .catch(err => {
           console.log(err)
@@ -205,7 +198,7 @@ export default {
         headers: this.config
       })
         .then(res => {
-          console.log(res)
+          // console.log(res)
           this.followings = res.data
           this.followingsCounting = res.data.length
           // this.getProfile()
@@ -215,7 +208,7 @@ export default {
         })
     },
     moveToDetail: function (movieId) {
-      console.log(movieId)
+      // console.log(movieId)
       this.$router.push({
         name: 'MovieDetail',
         query: { movieId }  
@@ -231,7 +224,7 @@ export default {
     if (localStorage.getItem('jwt')) {
       this.youId = this.$route.query.userId
       if (this.$store.state.id == this.youId) {
-      this.isSelf = true
+        this.isSelf = true
       }
       this.getProfile()
 
@@ -277,7 +270,8 @@ body {
 
 .name {
   font-size: 22px;
-  font-weight: bold
+  font-weight: bold;
+  font-family: 'Sunflower', sans-serif;
 }
 
 .idd {
@@ -291,7 +285,8 @@ body {
 
 .number {
   font-size: 22px;
-  font-weight: bold
+  font-weight: bold;
+  font-family: 'Sunflower', sans-serif;
 }
 
 .follow {
@@ -498,4 +493,16 @@ h2 {
   content: "";
   display: block;
 } */
+
+.nicknameupdate_addtxt {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+  margin: auto;
+  font-size: 13px;
+  width: 100%;
+  background-color: #fffefeee;
+  font-weight: 500;
+  font-family: 'Sunflower', sans-serif;
+}
 </style>

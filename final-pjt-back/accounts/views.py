@@ -32,7 +32,8 @@ def signup(request):
 
         user.set_password(request.data.get('password'))
         user.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
@@ -52,12 +53,12 @@ def profile(request, user_pk):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        # image = request.data.get('image')
+        image = request.data.get('image')
         if request.user.nickname != request.data.get('nickname') and get_user_model().objects.filter(nickname=request.data.get('nickname')).exists():
             return Response({'error': '일치하는 닉네임이 존재합니다.'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = UserProfileSerializer(request.user, data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
+            serializer.save(image=image)
             return Response(serializer.data)
 
     elif request.method == 'DELETE':
