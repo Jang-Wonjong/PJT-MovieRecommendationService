@@ -20,7 +20,7 @@ FRONT - 문슬기
 
 >  개발 기간 
 >
-> 2021.11.17 - 2021.11.25
+>  2021.11.17 - 2021.11.25
 
 
 
@@ -30,43 +30,43 @@ FRONT - 문슬기
 
 - 메인페이지
 
-![main](main.jpg)
+![main](README.assets/main.jpg)
 
 
 
 - 로그인 & 회원가입
 
-![login](login.jpg)
+![login](README.assets/login.jpg)
 
 
 
 - 영화 목록 페이지(메인)
 
-![movieList](movieList.jpg)
+![movieList](README.assets/movieList.jpg)
 
 
 
 - 영화 상세 정보 조회 페이지 (디테일 페이지)
 
-![movieDetail](movieDetail.jpg)
+![movieDetail](README.assets/movieDetail.jpg)
 
 
 
 - 디테일 페이지 - 리뷰 & 댓글
 
-![review](review.jpg)
+![review](README.assets/review.jpg)
 
 
 
 - 영화 추천 페이지
 
-![recommend](recommend.jpg)
+![recommend](README.assets/recommend.jpg)
 
 
 
 - user 프로필 페이지
 
-![profile](profile.jpg)
+![profile](README.assets/profile.jpg)
 
 
 
@@ -114,7 +114,7 @@ FRONT - 문슬기
 - MOVIE & CHILL
 - 넷플릭스 하면 Netfilx and chill이 생각이 나서 우리와 함께 영화 볼래?라는 뜻으로 네이밍
 
-![logo](../final-pjt-front/public/logo.png)
+![logo](README.assets/logo.png)
 
 
 
@@ -124,37 +124,37 @@ FRONT - 문슬기
 
 #### 디자인 컬러
 
-![디자인컬러](디자인컬러.jpg)
+![디자인컬러](README.assets/디자인컬러.jpg)
 
 ## Web page prototype
 
 - 메인페이지
 
-![21.11.22 영화 리스트](21.11.22 영화 리스트.jpg)
+![21.11.22 영화 리스트](README.assets/21.11.22 영화 리스트.jpg)
 
 
 
 - 디테일 페이지
 
-![21.11.22 영화 디테일](21.11.22 영화 디테일.jpg)
+![21.11.22 영화 디테일](README.assets/21.11.22 영화 디테일.jpg)
 
 
 
 - 회원가입, 로그아웃 페이지
 
-![21.11.22 회원가입](21.11.22 회원가입.jpg)
+![21.11.22 회원가입](README.assets/21.11.22 회원가입.jpg)
 
 
 
 - 프로필 페이지
 
-![21.11.22 프로필 페이지](21.11.22 프로필 페이지.jpg)
+![21.11.22 프로필 페이지](README.assets/21.11.22 프로필 페이지.jpg)
 
 
 
 - 리뷰 & 댓글
 
-![21.11.24 리뷰 수정 전](21.11.24 리뷰 수정 전.JPG)
+![21.11.24 리뷰 수정 전](README.assets/21.11.24 리뷰 수정 전.JPG)
 
 
 
@@ -162,7 +162,7 @@ FRONT - 문슬기
 
 ## ERD
 
-![erd](erd.jpg)
+![erd](README.assets/erd.jpg)
 
 
 
@@ -240,7 +240,7 @@ FRONT - 문슬기
 
 >  ### 노션을 활용해서 작업 목록, 하루 계획을 매일 작성
 
-![노션 진행 사항](노션 진행 사항.JPG)
+![노션 진행 사항](README.assets/노션 진행 사항.JPG)
 
 
 
@@ -301,9 +301,9 @@ vue에서는 회원가입이 잘 되었지만, django에서 문제가 발생한 
 jwt를 settings.py에서 다 입력을 해주었지만 계속해서 csrf cookies not set 오류가 발생함. 그리고 403 forbidden이 뜸
 ```
 
-![21.11.18 csrf](21.11.18 403 Frobidden.jpg)
+![21.11.18 csrf](README.assets/21.11.18 403 Frobidden.jpg)
 
-![21.11.18 csrf](21.11.18 csrf.jpg)
+![21.11.18 csrf](README.assets/21.11.18 csrf.jpg)
 
 
 
@@ -313,7 +313,7 @@ api_view에 @이가 사라짐...
 @api_view 하니까 잘 작동이 됨
 ```
 
-![21.11.18 오류발생이유](21.11.18 오류발생이유.jpg)
+![21.11.18 오류발생이유](README.assets/21.11.18 오류발생이유.jpg)
 
 
 
@@ -350,9 +350,9 @@ query를 사용해서 query: { movieId}를 작성하고 axios로 django에 요�
 data에 reviews를 null로 설정하면 보이지 않았지만, []로 하니 빈 리스트만 보였다
 ```
 
-![21.11.19 reviews 불러오기](21.11.19 reviews 불러오기.jpg)
+![21.11.19 reviews 불러오기](README.assets/21.11.19 reviews 불러오기.jpg)
 
-![21.11.19 리뷰오류해결](21.11.19 리뷰오류해결.jpg)
+![21.11.19 리뷰오류해결](README.assets/21.11.19 리뷰오류해결.jpg)
 
 ```
 views.py에서 기존 filter로 작성한 리뷰를 review = Review.objects.all()로 바꾸니 리뷰가 정상적으로 출력이 되었다.
@@ -368,7 +368,7 @@ review = Review.objects.filter(movie_id=movie_pk).order_by('-pk')로
 
 > 리뷰 떨어져서 나오게
 
-![21.11.19 리뷰 붙어서](21.11.19 리뷰 붙어서.JPG)
+![21.11.19 리뷰 붙어서](README.assets/21.11.19 리뷰 붙어서.JPG)
 
 ```vue
 <div>
@@ -387,7 +387,7 @@ review = Review.objects.filter(movie_id=movie_pk).order_by('-pk')로
 
 
 
-![21.11.19 리뷰 각각](21.11.19 리뷰 각각.jpg)
+![21.11.19 리뷰 각각](README.assets/21.11.19 리뷰 각각.jpg)
 
 ```vue
 <div>
@@ -408,7 +408,7 @@ li tag에 작성하니 각 한 줄씩 출력 됨
 
 > 리뷰 삭제
 
-![21.11.19 리뷰삭제오류](21.11.19 리뷰삭제오류.jpg)
+![21.11.19 리뷰삭제오류](README.assets/21.11.19 리뷰삭제오류.jpg)
 
 ```python
 리뷰를 삭제하는데 삭제가 되지 않고 발생한 오류...
@@ -489,9 +489,9 @@ def review_update_or_delete(request, movie_pk, review_pk):
 프로필 페이지에 정보들이 갑자기 출력되지 않음
 ```
 
-![500오류 2](PJT-FINAL README.assets/500오류 2.jpg)
+![500오류 2](README.assets/500오류 2.jpg)
 
-![500오류](PJT-FINAL README.assets/500오류.jpg)
+![500오류](README.assets/500오류.jpg)
 
 ```
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -541,7 +541,7 @@ fields = ('username', 'password', 'nickname',)
 
 > 로그인 405 오류
 
-![21.11.22 로그인 405오류](21.11.22 로그인 405오류.jpg)
+![21.11.22 로그인 405오류](README.assets/21.11.22 로그인 405오류.jpg)
 
 ```
 urlpatterns = [
@@ -568,7 +568,7 @@ urlpatterns = [
 
 > 프로필 페이지 정보 불러오는데 발생한 404 오류
 
-![21.11.22 프로필 404오류](21.11.22 프로필 404오류.jpg)
+![21.11.22 프로필 404오류](README.assets/21.11.22 프로필 404오류.jpg)
 
 ```
 urlpatterns = [
@@ -587,7 +587,7 @@ urlpatterns = [
 
 > 프로필 닉네임 수정이 안 됨
 
-![21.11.22 닉네임수정 400오류](21.11.22 닉네임수정 400오류.jpg)
+![21.11.22 닉네임수정 400오류](README.assets/21.11.22 닉네임수정 400오류.jpg)
 
 ```
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -621,7 +621,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 > 디테일 배경 오류
 
-![21.11.23 디테일 배경 오류](21.11.23 디테일 배경 오류.JPG)
+![21.11.23 디테일 배경 오류](README.assets/21.11.23 디테일 배경 오류.JPG)
 
 ```
 디테일 페이지에서 backdrop_path를 불러오는데 발생한 오류
@@ -632,7 +632,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 > 로그인 버튼 생성 오류
 
-![21.11.23 로그인 버튼 오류](21.11.23 로그인 버튼 오류.jpg)
+![21.11.23 로그인 버튼 오류](README.assets/21.11.23 로그인 버튼 오류.jpg)
 
 ```
 export default {
@@ -729,7 +729,7 @@ profile.vue 파일의 style에 옮겨서 css 적용시킴
 
 # 프로젝트를 마치며
 
-![신뢰](신뢰.jpg)
+![신뢰](README.assets/신뢰.jpg)
 
 
 
