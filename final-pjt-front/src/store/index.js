@@ -37,6 +37,9 @@ export default new Vuex.Store({
     REMOVE_TOKEN: function (state) {
       localStorage.removeItem("jwt")
       state.authToken = null
+      state.id = null
+      state.username = null
+      state.nickname = null
       state.isLogin = false
     },
     SAVE_LOGIN_INFO: function (state, data) { // 로그인 정보 저장

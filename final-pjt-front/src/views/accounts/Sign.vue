@@ -60,8 +60,6 @@
 </template>
 
 <script>
-
-
 export default {
   name: 'Sign',
   data: function () {

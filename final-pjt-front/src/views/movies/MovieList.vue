@@ -52,7 +52,7 @@ export default {
         name: 'MovieDetail',
         query: { movieId }  
       })
-    }
+    },
   },
   created: function () {
     if (localStorage.getItem('jwt')) {

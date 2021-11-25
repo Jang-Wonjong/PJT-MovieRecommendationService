@@ -8,11 +8,11 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse w-100" id="navbarNavAltMarkup">
+        <div class="collapse navbar-collapse w-100 justify-content-between" id="navbarNavAltMarkup">
           <div class="navbar-nav" v-if="this.$store.state.isLogin">
             <router-link class="nav-link active mx-2" :to="{ name: 'RecommendUser' }">RecommendUser</router-link>
           </div>
-          <div class="navbar-nav" v-if="this.$store.state.isLogin" @click="moveToProfile(meId)">
+          <div class="navbar-na align-items-center" v-if="this.$store.state.isLogin" @click="moveToProfile(meId)">
             <img src="https://occ-0-395-325.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABTzQndLIMejbjN7Yj6nzQHf0AffS5Whagu7Q4pYGeKpPxuO2brcmZvB729F3MQpEw6V4T1_vDzftgFBGpHFh18J9BEng.png?r=f79" alt=""
               width="50"
               class="p-2 cursor profile"
@@ -30,7 +30,7 @@ export default {
   name: 'App',
   data: function () {
     return {
-      meId: this.$store.state.id
+      meId: null,
     }
   },
   methods: {
@@ -52,6 +52,9 @@ export default {
         query: { userId }  
       })
     }
+  },
+  created: function () {
+    this.meId = this.$store.state.id
   }
 }
 </script>

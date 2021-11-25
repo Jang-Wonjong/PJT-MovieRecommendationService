@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div class="m-4 p-3 d-flex justify-content-center" v-if="userProfile">
       <div class="card-profile p-4">
         <div class=" image d-flex flex-column justify-content-center align-items-center"> 
@@ -13,7 +12,6 @@
               class="form-control nicknameupdate_addtxt"
               placeholder="입력하고 enter"
             >
-            <!-- <button @click="updateProfile(userProfile)">SAVE</button> -->
           </div>
       
           <div class="d-flex flex-row justify-content-center align-items-center mt-3"> 
@@ -38,14 +36,14 @@
       </div>
     </div>
 
-    <!-- movies -->
+    <!-- user movies -->
     <div class="team-grid">
       <div class="mx-5">
         <div class="intro">
           <h2 class="text-center">Movie Collection</h2>
         </div>
         <div class="row d-flex justify-content-center">
-          <div class="col-md-4 col-lg-3 item" v-for="usermovie in userMovies" :key="usermovie.user_id">
+          <div class="col-md-4 col-lg-3 item mx-3" v-for="usermovie in userMovies" :key="usermovie.user_id">
             <div class="box people" :style="`background-image:url('https://image.tmdb.org/t/p/original${usermovie.poster_path}');`">
               <div class="cover" @click="moveToDetail(usermovie.movie_id)">
                 <h3 class="name">{{ usermovie.title }}</h3>
@@ -61,14 +59,10 @@
 <script>
 import axios from 'axios'
 import { mapGetters, mapActions } from 'vuex'
-// import UserMovies from '@/components/UserMovies.vue'
 
 
 export default {
   name: 'UserProfile',
-  // components: {
-  //   UserMovies
-  // },
   data: function () {
     return {
       isSelf: false,
@@ -97,8 +91,7 @@ export default {
         headers: this.config
       })
         .then(res => {
-          // console.log(res)
-          
+          console.log(res)
           this.userProfile = res.data
           this.getFollowers()
           this.getFollowings()
@@ -114,8 +107,9 @@ export default {
         url: `http://127.0.0.1:8000/accounts/${this.youId}/profile/`,
         headers: this.config
       })
-        .then(res => {
-          console.log(res)
+        .then(() => {
+          // console.log(res)
+          this.youId = null
           this.$store.dispatch('logout')
         })
         .catch(err => {
@@ -135,8 +129,8 @@ export default {
         data: profileItem,
         headers: this.config
       })
-        .then(res => {
-          console.log(res)
+        .then(() => {
+          // console.log(res)
           this.$store.dispatch('profileUpdate', profileItem)
           this.getProfile()
           this.isUpdateOn = false
@@ -469,30 +463,6 @@ h2 {
 .social a:hover {
     opacity: 1
 }
-
-/* .movie-detail-image {
-  background-size: cover;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-}
-
-.movie-detail-image::after {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  min-height: 100vh;
-  background-color: rgb(40, 40, 40);
-  opacity: 0.7;
-  content: "";
-  display: block;
-} */
 
 .nicknameupdate_addtxt {
   padding-top: 5px;

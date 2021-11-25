@@ -122,10 +122,15 @@ def user_movies(request, user_pk):
     return Response(serializer.data)
 
 
-@api_view(['POST', 'DELETE'])
+@api_view(['GET', 'POST', 'DELETE'])
 @permission_classes([AllowAny])
-def user_movies_create_or_delete(request, movie_pk):
-    if request.method == 'POST':
+def user_movie_get_or_create_or_delete(request, movie_pk):
+    if request.method == 'GET':
+        data = False
+        if MyMovie.objects.filter(user_id=request.user.pk, movie_id=movie_pk).exists():
+            data = True
+        return Response(data)
+    elif request.method == 'POST':
         if MyMovie.objects.filter(user_id=request.user.pk, movie_id=movie_pk).exists():
             return Response({'error': '이미 저장'}, status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -180,8 +185,7 @@ def recommend_user(request):
         box['same_cnt'] = same_cnt
 
         data.append(box)
-
     
-    # data.sort(reverse=True)
+    data = sorted(data, key=lambda x: x['same_cnt'], reverse=True)  # 나와 겹치는 영화 많은 사람부터 보여줌
 
     return Response(data)

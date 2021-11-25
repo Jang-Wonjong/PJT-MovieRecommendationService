@@ -16,7 +16,7 @@
         <div class="col-xl-3 col-sm-6 mb-5" v-for="recomUser in recomUsers" :key="recomUser.id">
           <div class="bg rounded shadow-sm py-5 px-4">
             <img 
-              src="https://bootstrapious.com/i/snippets/sn-team/teacher-4.jpg" alt="" 
+              src="https://blog.kakaocdn.net/dn/9kurj/btqSQ5oxrnl/wLdy6J7nf4AkEFmVmSKHd0/img.jpg" alt="" 
               width="100" 
               class="img-fluid rounded-circle mb-3 img-thumbnail shadow-sm pointer"
               @click="moveToProfile(recomUser.id)"

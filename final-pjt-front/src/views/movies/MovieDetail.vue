@@ -51,55 +51,62 @@
           </div>
           <div>
             <div>
-              <button class="btn btn-outline-warning m-1" @click="review.isReviewUpdate=true"><i class="fas fa-eraser"></i></button>
+              <button class="btn btn-outline-warning m-1" @click="ReviewUpdateToggle(review)"><i class="fas fa-eraser"></i></button>
               <button class="btn btn-outline-warning m-1" @click="deleteReview(review)"><i class="fas fa-trash-alt"></i></button>
-              <button class="btn btn-outline-info m-1" @click="getComments(review)" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><i class="far fa-comment-dots"></i></button>
+              <button 
+                class="btn btn-outline-info m-1" 
+                @click="CommentOpenToggle(review)">
+                <i class="far fa-comment-dots"></i>
+              </button>
             </div>
             <span class="text3" >작성날짜 : {{ review.created_at }}</span><br>
             <span class="text3" >수정날짜 : {{ review.updated_at }}</span>
-        
-            <div v-if="review.isReviewUpdate">  <!-- 리뷰 수정 -->
+
+            <!-- review update input -->
+            <div v-if="review.isReviewUpdate">
               <input 
                 type="text"
-                v-model.trim="reviewContentUpdate"
+                v-model.trim="review.reviewUpdate"
                 @keyup.enter="updateReview(review)"
                 class="form-control reviewupdate_addtxt"
                 placeholder="입력하고 enter"
               >
             </div>
-          </div> 
-        <!-- 댓글댓글 -->
-        <div class="collapse" id="collapseExample" v-if="review.isCommentOpen">
-          <div class="comment_card card-body second2">
-            <input 
-              type="text"
-              v-model.trim="review.commentContent"
-              @keyup.enter="createComment(review)"
-              class="form-control comment_addtxt"
-              placeholder="add comment"
-            >
-            <div v-for="comment in comments" :key="comment.id">
-              <span @click="moveToProfile(comment.user_id)">{{ comment.nickname }}</span>
-              <span> : {{ comment.content }}</span>
-              <button class="btn btn-outline-warning m-1" @click="comment.isCommentUpdate=true"><i class="fas fa-eraser"></i></button>
-              <button class="btn btn-outline-warning m-1" @click="deleteComment(review, comment)"><i class="fas fa-trash-alt"></i></button>
-              <div >
+          </div>
+
+          <!-- comment on -->
+          <div v-if="review.isCommentOpen">
+            <div class="comment_card card-body second2">
               <input 
-                class="form-control commentupdate_addtxt"
                 type="text"
-                v-model.trim="commentContentUpdate"
-                @keyup.enter="updateComment(review, comment)"
-                placeholder="입력하고 enter"
+                v-model.trim="review.commentContent"
+                @keyup.enter="createComment(review)"
+                class="form-control comment_addtxt"
+                placeholder="add comment"
               >
+              <div v-for="comment in review.comments" :key="comment.id">
+                <span @click="moveToProfile(comment.user_id)">{{ comment.nickname }}</span>
+                <span> : {{ comment.content }}</span>
+                <button class="btn btn-outline-warning m-1" @click="commentUpdateToggle(comment)"><i class="fas fa-eraser"></i></button>
+                <button class="btn btn-outline-warning m-1" @click="deleteComment(review, comment)"><i class="fas fa-trash-alt"></i></button>
+                
+                <!-- comment update input -->
+                <div v-if="comment.isCommentUpdate">
+                  <input 
+                    class="form-control commentupdate_addtxt"
+                    type="text"
+                    v-model.trim="comment.commentUpdate"
+                    @keyup.enter="updateComment(review, comment)"
+                    placeholder="입력하고 enter"
+                  >
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <!-- 댓글댓글 -->
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -112,17 +119,12 @@ export default {
   data: function () {
     return {
       SelectedMovie: null,
-      SelectedMovieId: null,  // MovieList에서 query로 넘겨준 movie id 받는 변수
+      SelectedMovieId: null,      // MovieList에서 query로 넘겨준 movie id 받는 변수
 
-      reviews: null,  // 리뷰
-      reviewContent: null,
-      reviewContentUpdate: null,
+      reviews: null,              // 리뷰 불러오기
+      reviewContent: null,        // 리뷰 작성 v-model
       
-      rank: null, // 평점
-
-      comments: null,
-      commentContent: null,
-      commentContentUpdate: null,
+      rank: null,                 // 평점 v-model
 
       isUserMovie: false,
     }
@@ -161,9 +163,11 @@ export default {
           this.reviews = res.data.map(review => {
             return {
               ...review,
-              isReviewUpdate: false,
-              isCommentOpen: false,
-              commentContent: null,
+              isReviewUpdate: false,  // 리뷰 수정 input on
+              reviewUpdate: null,     // 리뷰 수정 v-model
+              isCommentOpen: false,   // 댓글 열기
+              comments: null,         // 각 리뷰의 댓글들
+              commentContent: null,   // 리뷰 작성 v-model (comments for문 돌기 전이라 review에 정의)
             }
           })
         })
@@ -211,7 +215,7 @@ export default {
     updateReview: function (review) {
       const reviewItem = {
         ...review,
-        content: this.reviewContentUpdate,
+        content: review.reviewUpdate,
       }
       axios({
         method: 'put',
@@ -229,28 +233,42 @@ export default {
         })
       this.reviewContentUpdate = null
     },
+    ReviewUpdateToggle: function (data) {
+      // console.log(data.isReviewUpdate)
+      data.isReviewUpdate = !data.isReviewUpdate
+      // console.log(data.isReviewUpdate)
+    },
 
     // comment
     getComments: function (review) {
+      // console.log('dd',review)
       axios({
         method: 'get',
         url: `http://127.0.0.1:8000/movie/review/${review.id}/comment/`,
         headers: this.config
       })
         .then(res => {
-          // console.log(res)
-          this.comments = res.data.map(comment => {
+          // console.log('뭘 가져ㄴ오냐',res)
+          review.comments = res.data.map(comment => {
             return {
               ...comment,
-              isCommentUpdate: false,
-              commentContent: null
+              isCommentUpdate: false,   // 댓글 수정 input on
+              commentUpdate: null       // 댓글 수정 v-model
             }
           })
+          // console.log(review.comments)
           // this.getReviews()
         })
         .catch(err => {
           console.log(err)
         })
+    },
+    CommentOpenToggle: function (data) {
+      // console.log(data)
+      this.getComments(data)
+      // console.log(data.isCommentOpen)
+      data.isCommentOpen = !data.isCommentOpen
+      // console.log(data.isCommentOpen)
     },
     createComment: function (review) {
       const commentItem = {
@@ -266,7 +284,7 @@ export default {
       })
         .then(res => {
           // console.log(res)
-          this.comments += res.data
+          review.comments += res.data
           this.getComments(review)
         })
         .catch(err => {
@@ -291,7 +309,7 @@ export default {
     updateComment: function (review, comment) {
       const commentItem = {
         ...comment,
-        content: this.commentContentUpdate,
+        content: comment.commentUpdate,
       }
       axios({
         method: 'put',
@@ -302,12 +320,16 @@ export default {
         .then(() => {
           // console.log(res)
           this.getComments(review)
-          this.isCommentUpdate=false
         })
         .catch(err => {
           console.log(err)
         })
-      this.commentContentUpdate = null
+      comment.commentUpdate = null
+    },
+    commentUpdateToggle: function (data) {
+      // console.log(data.isReviewUpdate)
+      data.isCommentUpdate = !data.isCommentUpdate
+      // console.log(data.isReviewUpdate)
     },
 
     // ============================== 내 영화 저장 ==============================
@@ -321,7 +343,7 @@ export default {
     userMovieAdd: function () {
       axios({
         method: 'post',
-        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/user-movies/`,
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/user-movie/`,
         headers: this.config
       })
         .then(() => {
@@ -336,7 +358,7 @@ export default {
     userMovieRemove: function () {
       axios({
         method: 'delete',
-        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/user-movies/`,
+        url: `http://127.0.0.1:8000/movie/${this.SelectedMovieId}/user-movie/`,
         headers: this.config
       })
         .then(() => {
@@ -355,11 +377,27 @@ export default {
         name: 'UserProfile',
         query: { userId }  
       })
+    },
+    checkMyMovie: function(movieId) { // My Movie에 저장했는지 확인
+      // console.log(movieId)
+      axios({
+        method: 'get',
+        url: `http://127.0.0.1:8000/movie/${movieId}/user-movie/`,
+        headers: this.config
+      })
+        .then(res => {
+          // console.log(res)
+          this.isUserMovie = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   created: function () {
     if (localStorage.getItem('jwt')) {
       this.SelectedMovieId = this.$route.query.movieId
+      this.checkMyMovie(this.SelectedMovieId)
       this.getMovie()
       this.getReviews()
     } else {
