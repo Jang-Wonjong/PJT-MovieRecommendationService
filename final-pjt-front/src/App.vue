@@ -30,7 +30,7 @@ export default {
   name: 'App',
   data: function () {
     return {
-      meId: null,
+      meId: this.$store.state.id,
     }
   },
   methods: {
